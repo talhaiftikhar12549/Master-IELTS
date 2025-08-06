@@ -8,6 +8,10 @@ export const Sidebar = () => {
             Dashboard
         </NavLink>
 
+         <NavLink to={"quiz-builder"} className="w-full bg-white px-5 py-2 rounded-l-full text-blue-500">
+           Quiz Builder
+        </NavLink>
+
         <NavLink to={"/dashboard"} className="w-full bg-white px-5 py-2 rounded-l-full text-blue-500">
             Enrolled Courses
         </NavLink>

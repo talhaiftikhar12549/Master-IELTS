@@ -8,6 +8,7 @@ import { CoursePage } from "./pages/Courses/CoursePage";
 import { CourseLayout } from "./layout/CourseLayout";
 import { Lesson } from "./pages/Courses/Lessons/lesson";
 import { AllCourses } from "./pages/Courses/AllCourses";
+import QuizBuilder from "./pages/Dashboard/QuizBuilder";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
 
       <Route path="/dashboard" element={<DashboardLayout />}>
         <Route index element={<DashboardHome />} />
+        <Route path="quiz-builder" element={<QuizBuilder />} />
       </Route>
 
       <Route path="/all-courses" element={<AllCourses />} />
