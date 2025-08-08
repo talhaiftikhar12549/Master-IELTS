@@ -1,39 +1,35 @@
 import { useState } from "react";
-import { NavLink, useParams } from "react-router-dom";
+import { NavLink, useParams, useOutletContext } from "react-router-dom";
 import { FaAngleLeft } from "react-icons/fa";
 import { courseData } from "../CoursePage";
 import LessonComments from "../../../components/Courses/Lessons/LessonComments";
 
 export const Lesson = () => {
-  const { coursePage, lessonSlug } = useParams();
+  const { courseSlug } = useParams();
   const [activeTab, setActiveTab] = useState("lesson");
 
-  const topics = courseData[coursePage] || [];
+  const desiredLesson = useOutletContext()
 
-  let lesson = null;
-  for (const topic of topics) {
-    lesson = topic.lessons.find((l) => l.slug === lessonSlug);
-    if (lesson) break;
-  }
-
+  let lesson = desiredLesson;
+ 
   if (!lesson) {
-    return <p className="text-red-500">Lesson not found.</p>;
+    return <p className="text-blue-500">Loading...</p>;
   }
 
   return (
     <div className="p-6 bg-white shadow rounded">
       <NavLink
-        to={`/course/${coursePage}`}
+        to={`/course/${courseSlug}`}
         className="w-fit py-2 px-5 mb-4 rounded-md bg-blue-500 flex items-center justify-center text-white capitalize"
       >
-        <FaAngleLeft className="mr-2" /> {coursePage}
+        <FaAngleLeft className="mr-2" /> {courseSlug}
       </NavLink>
 
       {/* Tabs */}
       <div className="mb-6 border-b border-gray-200">
         <nav className="flex space-x-6">
           <button
-            className={`py-2 px-4 text-sm font-medium ${
+            className={`py-2 px-4 text-sm font-medium cursor-pointer ${
               activeTab === "lesson"
                 ? "border-b-2 border-blue-500 text-blue-600"
                 : "text-gray-500 hover:text-blue-600"
@@ -43,7 +39,7 @@ export const Lesson = () => {
             Lesson
           </button>
           <button
-            className={`py-2 px-4 text-sm font-medium ${
+            className={`py-2 px-4 text-sm font-medium cursor-pointer ${
               activeTab === "qa"
                 ? "border-b-2 border-blue-500 text-blue-600"
                 : "text-gray-500 hover:text-blue-600"
@@ -60,13 +56,13 @@ export const Lesson = () => {
         <div>
           <h1 className="text-2xl font-bold mb-4">{lesson.title}</h1>
           <p className="text-gray-600 mb-2">Type: {lesson.type}</p>
-          <p className="text-gray-600 mb-4">Course: {coursePage}</p>
+          <p className="text-gray-600 mb-4">Course: {courseSlug}</p>
 
-          {lesson.type === "video" && (
+          {lesson.videoUrl !== "" && (
             <div className="aspect-video w-full">
               <iframe
                 className="w-full h-full rounded"
-                src="https://www.youtube.com/embed/w_tIn3BGGPM?si=dHzaq0bIrS6ZZZWR"
+                src={lesson.videoUrl}
                 title="YouTube video player"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 referrerPolicy="strict-origin-when-cross-origin"
@@ -74,6 +70,13 @@ export const Lesson = () => {
               ></iframe>
             </div>
           )}
+
+          <div className="mt-5">
+            <h2 className="text-xl font-bold mb-2">Lesson Description:</h2>
+            <p>
+              {lesson.content}
+              </p>
+          </div>
         </div>
       )}
 

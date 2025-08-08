@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import reading from "../../assets/Courses/reading-course.jpeg";
-import { NavLink, Outlet, useParams } from "react-router-dom";
+import { NavLink, Outlet, useParams, useOutletContext  } from "react-router-dom";
 import { FaAngleLeft } from "react-icons/fa";
+import api from "../../services/api";
 
 export const courseData = {
   reading: [
@@ -15,7 +16,11 @@ export const courseData = {
     {
       topicTitle: "Reading Topic 2",
       lessons: [
-        { title: "Reading Lesson 1", slug: "reading-lesson-1", type: "mock test" },
+        {
+          title: "Reading Lesson 1",
+          slug: "reading-lesson-1",
+          type: "mock test",
+        },
       ],
     },
   ],
@@ -31,7 +36,11 @@ export const courseData = {
     {
       topicTitle: "Listening Topic 1",
       lessons: [
-        { title: "Listening Lesson 1", slug: "listening-lesson-1", type: "video" },
+        {
+          title: "Listening Lesson 1",
+          slug: "listening-lesson-1",
+          type: "video",
+        },
         { title: "Listening Quiz", slug: "listening-quiz", type: "quiz" },
       ],
     },
@@ -40,7 +49,11 @@ export const courseData = {
     {
       topicTitle: "Speaking Topic 1",
       lessons: [
-        { title: "Speaking Mock Test", slug: "speaking-mock-test", type: "mock test" },
+        {
+          title: "Speaking Mock Test",
+          slug: "speaking-mock-test",
+          type: "mock test",
+        },
       ],
     },
   ],
@@ -48,18 +61,33 @@ export const courseData = {
 
 export const CoursePage = () => {
   const [openIndex, setOpenIndex] = useState(null);
-  const { coursePage, lessonSlug } = useParams();
+  const {courseSlug, lessonSlug } = useParams();
+
+  const [singleCourse, setSingleCourse] = useState(null);
+  const [singleLesson, setSingleLesson] = useState([])
+
+   const coursesData = useOutletContext()
+
+  const getCourses = async () => {
+    const desiredCourse = coursesData?.find((c)=> courseSlug === c.title.toLowerCase() )
+    setSingleCourse(desiredCourse);
+  };
+
+  useEffect(() => {
+    getCourses();
+  }, [coursesData]);
+
 
   const toggleAccordion = (index) => {
     setOpenIndex(openIndex === index ? null : index);
   };
 
-  const topics = courseData[coursePage];
+  const topics =  singleCourse?.lessons;
 
   if (!topics) {
     return (
-      <div className="text-center mt-10 text-red-500 font-bold">
-        Course not found.
+      <div className="text-center mt-10 text-blue-500 font-bold">
+       Loading...
       </div>
     );
   }
@@ -67,18 +95,27 @@ export const CoursePage = () => {
   if (lessonSlug) {
     return (
       <div className="w-full max-w-4xl mx-auto mt-10">
-        <Outlet />
+        <Outlet context={singleLesson} />
       </div>
     );
   }
 
   return (
     <div className="w-full max-w-2xl mx-auto flex flex-col items-center mt-10">
-       <NavLink to={`/all-courses`} className="w-fit py-2 px-5 rounded-md bg-blue-500 flex items-center justify-center text-white capitalize">
-                  <FaAngleLeft className="mr-2" /> Courses
-                  </NavLink>
-      <h2 className="text-2xl font-bold capitalize mb-4">{coursePage} Course</h2>
-      <img src={reading} alt="Course" className="rounded-md shadow-lg mb-8 w-full" />
+      <NavLink
+        to={`/all-courses`}
+        className="w-fit py-2 px-5 rounded-md bg-blue-500 flex items-center justify-center text-white capitalize"
+      >
+        <FaAngleLeft className="mr-2" /> Courses
+      </NavLink>
+      <h2 className="text-2xl font-bold capitalize mb-4">
+        {courseSlug} Course
+      </h2>
+      <img
+        src={reading}
+        alt="Course"
+        className="rounded-md shadow-lg mb-8 w-full"
+      />
 
       <div className="w-full space-y-4">
         <h3 className="text-xl font-semibold mb-4">Topics</h3>
@@ -89,14 +126,15 @@ export const CoursePage = () => {
               className="w-full text-left px-4 py-3 bg-gray-100 hover:bg-gray-200 font-medium"
               onClick={() => toggleAccordion(index)}
             >
-              {topic.topicTitle}
+              {topic.title}
             </button>
 
             {openIndex === index && (
               <div className="px-6 py-3 space-y-2 bg-white flex flex-col">
-                {topic.lessons.map((lesson, idx) => (
+                {topic.topics.map((lesson, idx) => (
                   <NavLink
-                    to={`${lesson.slug}`}
+                  onClick={()=> setSingleLesson(lesson)}
+                    to={`${lesson.title}`}
                     key={idx}
                     className="text-blue-600 hover:underline cursor-pointer"
                   >

@@ -9,27 +9,37 @@ import { CourseLayout } from "./layout/CourseLayout";
 import { Lesson } from "./pages/Courses/Lessons/lesson";
 import { AllCourses } from "./pages/Courses/AllCourses";
 import QuizBuilder from "./pages/Dashboard/QuizBuilder";
+import CreateCourse from "./pages/Dashboard/CreateCourse";
+import Login from "./pages/auth/Login";
+import { AuthProvider } from "./context/AuthContext";
+import Register from "./pages/auth/Register";
 
 function App() {
   return (
+    <AuthProvider>
     <Routes>
       <Route path="/" element={<MainLayout />}>
         <Route index element={<Home />} />
+         <Route path="login" element={<Login />} />
+         <Route path="register" element={<Register />} />
+
       </Route>
 
       <Route path="/dashboard" element={<DashboardLayout />}>
         <Route index element={<DashboardHome />} />
         <Route path="quiz-builder" element={<QuizBuilder />} />
+        <Route path="create-course" element={<CreateCourse />} />
       </Route>
 
       <Route path="/all-courses" element={<AllCourses />} />
-
       <Route path="/course" element={<CourseLayout />}>
-        <Route path=":coursePage" element={<CoursePage />}>
+        <Route path=":courseSlug" element={<CoursePage />}>
           <Route path=":lessonSlug" element={<Lesson />} />
         </Route>
       </Route>
+      
     </Routes>
+    </AuthProvider>
   );
 }
 

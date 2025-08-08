@@ -55,14 +55,13 @@ const QuizBuilder = () => {
     setQuestions(updated);
   };
 
-  // ✅ Added: Remove question handler
   const handleRemoveQuestion = (index) => {
     const updated = questions.filter((_, i) => i !== index);
     setQuestions(updated);
   };
 
   return (
-    <div className="flex p-6 gap-6">
+    <div className="w-full flex p-6 gap-6">
       {/* Sidebar */}
       <div className="w-[250px] border-r pr-4">
         <h2 className="text-lg font-semibold mb-2">Select Course</h2>
@@ -107,7 +106,7 @@ const QuizBuilder = () => {
       </div>
 
       {/* Question Builder */}
-      <div className="h-full pb-10 flex-1 overflow-y-scroll">
+      <div className="h-full pb-10 flex-1 overflow-y-auto">
         <h2 className="text-xl font-bold mb-4">Quiz for {selectedCourse || "..."}</h2>
 
         {questions.length === 0 && <p>No questions added yet.</p>}
@@ -201,7 +200,6 @@ const QuizBuilder = () => {
               </>
             )}
 
-            {/* ✅ Added: Remove button */}
             <button
               className="mt-3 bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600"
               onClick={() => handleRemoveQuestion(index)}
@@ -211,7 +209,6 @@ const QuizBuilder = () => {
           </div>
         ))}
 
-        {/* ✅ Added: Save Quiz button */}
         {questions.length > 0 && (
           <div className="mt-6">
             <button

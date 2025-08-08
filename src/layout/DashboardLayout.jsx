@@ -8,10 +8,12 @@ export const DashboardLayout = ()=> {
         <div className="w-screen h-screen overflow-hidden">
             <Topbar />
 
-            <div className="w-full h-full bg-gray-50 flex">
+            <div className="w-full h-full bg-gray-50 flex ">
             <Sidebar />
 
+            <div className="w-full overflow-y-auto">
             <Outlet />
+            </div>
             </div>
         </div>
     )
