@@ -30,6 +30,7 @@ export const CourseLayout = () => {
             <NavLink
               key={course._id}
               to={`/course/${course.title.toLowerCase()}`}
+              
               className="w-full flex flex-col p-5 shadow-lg bg-white rounded-lg mt-5 hover:bg-gray-100 transition"
             >
               <p className="capitalize font-medium text-gray-800">{course.title}</p>

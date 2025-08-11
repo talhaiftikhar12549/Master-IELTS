@@ -1,16 +1,35 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { NavLink, useParams, useOutletContext } from "react-router-dom";
 import { FaAngleLeft } from "react-icons/fa";
-import { courseData } from "../CoursePage";
 import LessonComments from "../../../components/Courses/Lessons/LessonComments";
+import api from "../../../services/api";
 
 export const Lesson = () => {
   const { courseSlug } = useParams();
   const [activeTab, setActiveTab] = useState("lesson");
 
-  const desiredLesson = useOutletContext()
+  const {desiredLesson, singleCourseID} = useOutletContext()
 
   let lesson = desiredLesson;
+
+  console.log(desiredLesson)
+
+    const getTopics = async ()=> {
+    try {
+      // const res = await api.get(`/lessons/${singleLesson._id}`);
+      // console.log("getting single topic",res.data);
+      
+    } catch (err) {
+      console.log("some error occured while getting Topics data", err)
+    }
+  }
+
+  // /:courseId/:lessonId/:topicId
+
+  //   useEffect(() => {
+  //   getTopics();
+  // }, [desiredLesson]);
+  
  
   if (!lesson) {
     return <p className="text-blue-500">Loading...</p>;
@@ -82,7 +101,7 @@ export const Lesson = () => {
 
       {activeTab === "qa" && (
         <div>
-          <LessonComments />
+          <LessonComments  />
         </div>
       )}
     </div>

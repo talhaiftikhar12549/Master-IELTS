@@ -2,62 +2,61 @@ import { useEffect, useState } from "react";
 import reading from "../../assets/Courses/reading-course.jpeg";
 import { NavLink, Outlet, useParams, useOutletContext  } from "react-router-dom";
 import { FaAngleLeft } from "react-icons/fa";
-import api from "../../services/api";
 
-export const courseData = {
-  reading: [
-    {
-      topicTitle: "Reading Topic 1",
-      lessons: [
-        { title: "Reading Lesson 1", slug: "reading-lesson-1", type: "video" },
-        { title: "Reading Lesson 2", slug: "reading-lesson-2", type: "quiz" },
-      ],
-    },
-    {
-      topicTitle: "Reading Topic 2",
-      lessons: [
-        {
-          title: "Reading Lesson 1",
-          slug: "reading-lesson-1",
-          type: "mock test",
-        },
-      ],
-    },
-  ],
-  writing: [
-    {
-      topicTitle: "Writing Topic 1",
-      lessons: [
-        { title: "Writing Lesson 1", slug: "writing-lesson-1", type: "video" },
-      ],
-    },
-  ],
-  listening: [
-    {
-      topicTitle: "Listening Topic 1",
-      lessons: [
-        {
-          title: "Listening Lesson 1",
-          slug: "listening-lesson-1",
-          type: "video",
-        },
-        { title: "Listening Quiz", slug: "listening-quiz", type: "quiz" },
-      ],
-    },
-  ],
-  speaking: [
-    {
-      topicTitle: "Speaking Topic 1",
-      lessons: [
-        {
-          title: "Speaking Mock Test",
-          slug: "speaking-mock-test",
-          type: "mock test",
-        },
-      ],
-    },
-  ],
-};
+// export const courseData = {
+//   reading: [
+//     {
+//       topicTitle: "Reading Topic 1",
+//       lessons: [
+//         { title: "Reading Lesson 1", slug: "reading-lesson-1", type: "video" },
+//         { title: "Reading Lesson 2", slug: "reading-lesson-2", type: "quiz" },
+//       ],
+//     },
+//     {
+//       topicTitle: "Reading Topic 2",
+//       lessons: [
+//         {
+//           title: "Reading Lesson 1",
+//           slug: "reading-lesson-1",
+//           type: "mock test",
+//         },
+//       ],
+//     },
+//   ],
+//   writing: [
+//     {
+//       topicTitle: "Writing Topic 1",
+//       lessons: [
+//         { title: "Writing Lesson 1", slug: "writing-lesson-1", type: "video" },
+//       ],
+//     },
+//   ],
+//   listening: [
+//     {
+//       topicTitle: "Listening Topic 1",
+//       lessons: [
+//         {
+//           title: "Listening Lesson 1",
+//           slug: "listening-lesson-1",
+//           type: "video",
+//         },
+//         { title: "Listening Quiz", slug: "listening-quiz", type: "quiz" },
+//       ],
+//     },
+//   ],
+//   speaking: [
+//     {
+//       topicTitle: "Speaking Topic 1",
+//       lessons: [
+//         {
+//           title: "Speaking Mock Test",
+//           slug: "speaking-mock-test",
+//           type: "mock test",
+//         },
+//       ],
+//     },
+//   ],
+// };
 
 export const CoursePage = () => {
   const [openIndex, setOpenIndex] = useState(null);
@@ -68,13 +67,13 @@ export const CoursePage = () => {
 
    const coursesData = useOutletContext()
 
-  const getCourses = async () => {
+  const getSelectedCourse = async () => {
     const desiredCourse = coursesData?.find((c)=> courseSlug === c.title.toLowerCase() )
     setSingleCourse(desiredCourse);
   };
 
   useEffect(() => {
-    getCourses();
+    getSelectedCourse();
   }, [coursesData]);
 
 
@@ -83,6 +82,7 @@ export const CoursePage = () => {
   };
 
   const topics =  singleCourse?.lessons;
+
 
   if (!topics) {
     return (
@@ -95,7 +95,7 @@ export const CoursePage = () => {
   if (lessonSlug) {
     return (
       <div className="w-full max-w-4xl mx-auto mt-10">
-        <Outlet context={singleLesson} />
+        <Outlet context={{desiredLesson: singleLesson, singleCourseID: singleCourse._id}} />
       </div>
     );
   }
