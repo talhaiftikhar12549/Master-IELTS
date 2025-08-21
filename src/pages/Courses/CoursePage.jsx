@@ -80,9 +80,12 @@ export const CoursePage = () => {
   const toggleAccordion = (index) => {
     setOpenIndex(openIndex === index ? null : index);
   };
+  
 
-  const topics =  singleCourse?.lessons;
+  const topics =  singleCourse?.topics;
 
+  console.log(singleCourse);
+  
 
   if (!topics) {
     return (
@@ -95,7 +98,7 @@ export const CoursePage = () => {
   if (lessonSlug) {
     return (
       <div className="w-full max-w-4xl mx-auto mt-10">
-        <Outlet context={{desiredLesson: singleLesson, singleCourseID: singleCourse._id}} />
+        <Outlet context={{desiredLesson: singleLesson}} />
       </div>
     );
   }
@@ -129,9 +132,13 @@ export const CoursePage = () => {
               {topic.title}
             </button>
 
+{console.log(topic)
+                }
+
             {openIndex === index && (
               <div className="px-6 py-3 space-y-2 bg-white flex flex-col">
-                {topic.topics.map((lesson, idx) => (
+                
+                {topic.map((lesson, idx) => (
                   <NavLink
                   onClick={()=> setSingleLesson(lesson)}
                     to={`${lesson.title}`}

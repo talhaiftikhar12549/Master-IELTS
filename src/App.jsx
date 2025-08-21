@@ -13,6 +13,8 @@ import CreateCourse from "./pages/Dashboard/CreateCourse";
 import Login from "./pages/auth/Login";
 import { AuthProvider } from "./context/AuthContext";
 import Register from "./pages/auth/Register";
+import CreateTopics from "./pages/Dashboard/CreateTopics";
+import CreateLessons from "./pages/Dashboard/CreateLessons";
 
 function App() {
   return (
@@ -29,6 +31,8 @@ function App() {
         <Route index element={<DashboardHome />} />
         <Route path="quiz-builder" element={<QuizBuilder />} />
         <Route path="create-course" element={<CreateCourse />} />
+        <Route path="create-topics" element={<CreateTopics />} />
+        <Route path="create-lessons" element={<CreateLessons />} />
       </Route>
 
       <Route path="/all-courses" element={<AllCourses />} />
