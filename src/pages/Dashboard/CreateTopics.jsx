@@ -40,9 +40,10 @@ const CreateTopics = () => {
       console.error("Error fetching topics");
     }
   };
+  
 
   useEffect(() => {
-    fetchTopics();
+      fetchTopics();
   }, []);
 
   const handleChange = (e) => {
@@ -207,7 +208,7 @@ const CreateTopics = () => {
       {/* Topic Table */}
        <div className="mt-12">
         <h3 className="text-2xl font-semibold mb-4 text-gray-800">
-          Created Courses
+          Created Topics
         </h3>
         {topics.length === 0 ? (
           <p className="text-gray-500">No topics found.</p>
