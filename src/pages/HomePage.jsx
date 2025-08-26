@@ -7,6 +7,10 @@ import laptop from "../assets/Home/laptop.jpg";
 import WhoFor from "../components/Home/WhoFor/WhoFor";
 import Roadmap from "../components/Home/Roadmap/Roadmap";
 import ChooseCourse from "../components/Home/ChooseCourse/ChooseCourse";
+import WhyPopular from "../components/Home/WhyPopular/WhyPopular";
+import Reviews from "../components/Home/Reviews/Reviews";
+import AnyQuestions from "../components/Home/AnyQuestions/AnyQuestions";
+import FAQs from "../components/Home/FAQs/FAQs";
 
 export default function Homepage() {
   return (
@@ -49,8 +53,20 @@ export default function Homepage() {
         {/*Your roadmap to a 7+ IELTS Band */}
         <Roadmap />
 
+         {/*Why IELTS is the most popular English proficiency test */}
+        <WhyPopular />
+
          {/*Choose Your Course */}
         <ChooseCourse />
+
+        {/* REVIEWS  */}
+        <Reviews />
+
+        {/* ANY QUESTIONS FORM  */}
+        <AnyQuestions />
+
+        {/* FAQS  */}
+        <FAQs />
 
     </>
   );
