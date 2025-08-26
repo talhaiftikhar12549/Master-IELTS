@@ -1,8 +1,25 @@
-const PaymentCard = ({ title, actualPrice, discPrice, offer, desc, icon }) => {
+const PaymentCard = ({
+  id,
+  title,
+  actualPrice,
+  discPrice,
+  offer,
+  desc,
+  icon,
+}) => {
   return (
-    <div className={`w-[400px] rounded-3xl shadow-xl pb-5  overflow-hidden
-     min-h-[640px] relative ${title === "Premium" ? "bg-[#0B65F1] text-white" : "bg-white"}`}>
-      <div className={`p-4 rounded-t-3xl relative ${title === "Premium" ? "bg-[#0B65F1] text-white" : "bg-blue-200"}`}>
+    <div
+      key={id}
+      className={`w-[400px] rounded-3xl shadow-xl pb-5  overflow-hidden
+     min-h-[640px] relative ${
+       title === "Premium" ? "bg-[#0B65F1] text-white" : "bg-white"
+     }`}
+    >
+      <div
+        className={`p-4 rounded-t-3xl relative ${
+          title === "Premium" ? "bg-[#0B65F1] text-white" : "bg-blue-200"
+        }`}
+      >
         <p className="text-[22px] font-extrabold text-center">{title}</p>
 
         {offer && (
@@ -13,7 +30,11 @@ const PaymentCard = ({ title, actualPrice, discPrice, offer, desc, icon }) => {
       </div>
 
       <div className="w-full flex items-end justify-center space-x-4 py-10 pr-5 min-h-[180px]">
-        <p className={`font-extrabold mb-4 ${title === "Premium" ? "text-[32px] line-through" : "text-[68px]"}`}>
+        <p
+          className={`font-extrabold mb-4 ${
+            title === "Premium" ? "text-[32px] line-through" : "text-[68px]"
+          }`}
+        >
           ${actualPrice}
         </p>
 
@@ -27,14 +48,18 @@ const PaymentCard = ({ title, actualPrice, discPrice, offer, desc, icon }) => {
 
       {desc.map((text, index) => {
         return (
-          <div className="flex pb-2 px-5">
+          <div key={index} className="flex pb-2 px-5">
             <div className="w-[10%]">
-              <div className={`bg-transparent ${title === "Premium" ? "text-white" : ""} w-fit text-xl p-1 rounded-full`}>
+              <div
+                className={`bg-transparent ${
+                  title === "Premium" ? "text-white" : ""
+                } w-fit text-xl p-1 rounded-full`}
+              >
                 {icon}
               </div>
             </div>
             <div className="w-[85%]">
-              <p key={index} className="text-[16px]">
+              <p className="text-[16px]">
                 {text}
               </p>
             </div>
@@ -43,11 +68,17 @@ const PaymentCard = ({ title, actualPrice, discPrice, offer, desc, icon }) => {
       })}
 
       <div className="w-full flex justify-center items-center py-5 absolute bottom-5">
-        <button className={`w-fit px-10 py-3  rounded-full 
-        ${title === "Premium" ? "bg-[#fff] text-[#0554F2] hover:bg-white/80" : "bg-[#0554F2] text-white hover:bg-blue-500/80" }
-          font-bold cursor-pointer`}>
-            Sign up Now!
-          </button>
+        <button
+          className={`w-fit px-10 py-3  rounded-full 
+        ${
+          title === "Premium"
+            ? "bg-[#fff] text-[#0554F2] hover:bg-white/80"
+            : "bg-[#0554F2] text-white hover:bg-blue-500/80"
+        }
+          font-bold cursor-pointer`}
+        >
+          Sign up Now!
+        </button>
       </div>
     </div>
   );

@@ -10,7 +10,8 @@ const faqData = [
   },
   {
     id: 2,
-    question: "How is this course different from other IELTS preparation courses?",
+    question:
+      "How is this course different from other IELTS preparation courses?",
     answer:
       "Our course takes IELTS prep to the next level with fun, interactive features! You’ll get video lessons, quizzes, real examples, and mock tests, plus personal feedback on your essays to help you improve fast. But that’s not all—join our community page where you can connect with other test-takers, share tips, and celebrate your progress. You’ll also earn achievement badges to show off your wins and boost your social profile! It’s a dynamic, supportive way to prepare for IELTS while staying motivated and engaged.",
   },
@@ -42,8 +43,8 @@ const FAQs = () => {
   };
 
   return (
-    <div className="w-full flex flex-col py-20 items-center justify-center">
-      <h2 className="text-[40px] md:text-[48px] font-semibold text-center mb-12">
+    <section className="w-full flex flex-col py-20 items-center justify-center">
+      <h2 className="text-2xl md:text-[48px] font-bold text-center mb-12 leading-snug">
         <span className="text-[#0554F2]">Frequently</span> Asked Questions
       </h2>
 
@@ -51,7 +52,7 @@ const FAQs = () => {
         {faqData.map((faq) => (
           <div
             key={faq.id}
-            className="border-b border-gray-300 py-5 cursor-pointer group"
+            className="border-b border-gray-200 py-5 cursor-pointer group"
             onClick={() => toggleAccordion(faq.id)}
           >
             {/* Question */}
@@ -66,16 +67,18 @@ const FAQs = () => {
                 {faq.question}
               </h3>
               {openId === faq.id ? (
-                <FaChevronUp className="w-5 h-5 text-[#0554F2] transition-transform duration-300" />
+                <FaChevronUp className="w-4 h-4 text-[#0554F2] transition-transform duration-300" />
               ) : (
-                <FaChevronDown className="w-5 h-5 text-gray-500 group-hover:text-[#0554F2] transition-transform duration-300" />
+                <FaChevronDown className="w-4 h-4 text-gray-500 group-hover:text-[#0554F2] transition-transform duration-300" />
               )}
             </div>
 
-            {/* Answer with animation */}
+            {/* Answer with smooth animation */}
             <div
               className={`overflow-hidden transition-all duration-500 ease-in-out ${
-                openId === faq.id ? "max-h-[500px] mt-3" : "max-h-0"
+                openId === faq.id
+                  ? "max-h-[500px] opacity-100 mt-3"
+                  : "max-h-0 opacity-0"
               }`}
             >
               <p className="text-gray-600 leading-relaxed">{faq.answer}</p>
@@ -83,7 +86,7 @@ const FAQs = () => {
           </div>
         ))}
       </div>
-    </div>
+    </section>
   );
 };
 

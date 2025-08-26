@@ -33,11 +33,11 @@ const cardsData = [
 const Reviews = () => {
   return (
     <div className="w-full flex flex-col py-20 items-center justify-center bg-[#DAE8FD]">
-      <h2 className="text-[48px] font-semibold text-center">
+      <h2 className="text-2xl lg:text-[48px] font-semibold text-center">
         <span className="text-[#0554F2]">What</span> Our Students Say
       </h2>
 
-      <div className="w-2/3 mt-10">
+      <div className="w-10/12 md:w-10-12 lg:w-2/3 mt-10 relative">
         <Swiper
           modules={[Navigation, Pagination]}
           spaceBetween={20}
@@ -62,6 +62,20 @@ const Reviews = () => {
           ))}
         </Swiper>
       </div>
+
+      {/* Custom CSS for arrows */}
+      <style jsx>{`
+        .swiper-button-next,
+        .swiper-button-prev {
+          color: white !important;
+          width: 25px !important;
+          height: 25px !important;
+        }
+        .swiper-button-next::after,
+        .swiper-button-prev::after {
+          font-size: 20px !important;
+        }
+      `}</style>
     </div>
   );
 };

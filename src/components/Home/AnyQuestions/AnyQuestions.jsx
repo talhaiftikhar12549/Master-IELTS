@@ -14,14 +14,16 @@ const validationSchema = Yup.object({
 
 const AnyQuestions = () => {
   return (
-    <div className="w-full flex flex-col py-20 items-center justify-center bg-[#F3F8FF]">
-      <h2 className="text-[48px] font-semibold mb-10 text-center">
+    <div className="w-full flex flex-col py-16 md:py-20 items-center justify-center bg-[#F3F8FF] px-4">
+      {/* Heading */}
+      <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[48px] font-semibold mb-8 md:mb-10 text-center leading-tight">
         <span className="text-[#0554F2]">Any</span> Questions?
       </h2>
 
-      <div className="w-2/3 flex flex-col md:flex-row items-center gap-5">
+      {/* Form & Image Container */}
+      <div className="w-full md:w-5/6 lg:w-2/3 flex flex-col md:flex-row items-center gap-8 md:gap-5">
         {/* Left Side - Form */}
-        <div className="w-full md:w-1/2 p-8">
+        <div className="w-full md:w-1/2 bg-white p-6 md:p-8 rounded-xl shadow-md">
           <Formik
             initialValues={{ name: "", email: "", phone: "", message: "" }}
             validationSchema={validationSchema}
@@ -38,7 +40,7 @@ const AnyQuestions = () => {
                     type="text"
                     name="name"
                     placeholder="Your Name"
-                    className="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    className="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0554F2]"
                   />
                   <ErrorMessage
                     name="name"
@@ -53,7 +55,7 @@ const AnyQuestions = () => {
                     type="email"
                     name="email"
                     placeholder="Your Email"
-                    className="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    className="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0554F2]"
                   />
                   <ErrorMessage
                     name="email"
@@ -68,7 +70,7 @@ const AnyQuestions = () => {
                     type="text"
                     name="phone"
                     placeholder="Your Phone Number"
-                    className="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    className="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0554F2]"
                   />
                   <ErrorMessage
                     name="phone"
@@ -84,7 +86,7 @@ const AnyQuestions = () => {
                     name="message"
                     placeholder="Your Message"
                     rows="4"
-                    className="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    className="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0554F2]"
                   />
                   <ErrorMessage
                     name="message"
@@ -111,7 +113,7 @@ const AnyQuestions = () => {
           <img
             src={contactImage}
             alt="Contact Us"
-            className="w-full rounded-xl shadow-lg"
+            className="w-full h-auto rounded-xl shadow-lg object-cover"
           />
         </div>
       </div>

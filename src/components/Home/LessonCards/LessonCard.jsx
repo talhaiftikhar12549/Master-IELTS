@@ -12,7 +12,7 @@ const LessonCard = ({ imageURL, title, desc }) => {
 
       {desc.map((text, index) => {
         return (
-          <div className="flex pb-2">
+          <div key={index} className="flex pb-2">
             <div className="w-[8%]">
             <div className="mt-2 bg-[#0554F2] w-[8px] h-[8px] rounded-full" />
             </div>

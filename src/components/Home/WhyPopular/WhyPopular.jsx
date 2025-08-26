@@ -20,29 +20,29 @@ const CardsData = [
     id: 3,
     imageURL: writing,
     title: "Boost Your Career",
-    desc: "IELTS certification is valued by over 80% of international employers. It opens doors to jobs in fields like business, healthcare, and technology, proving you have the English skills to succeed."
+    desc: "IELTS certification is valued by over 80% of international employers. It opens doors to jobs in fields like business, healthcare, and technology, proving you have the English skills to succeed.",
   },
 ];
 
 const WhyPopular = () => {
   return (
-    <div className="w-full flex flex-col py-20 items-center justify-center">
-      <h2 className="text-[48px] font-semibold">
+    <div className="w-full flex flex-col py-20 px-10 items-center justify-center">
+      <h2 className="text-2xl md:text-[48px] font-semibold text-center">
         <span className="text-[#0554F2]">Why IELTS</span> is the most popular
         English proficiency test
       </h2>
       <div className="w-full flex flex-col items-center justify-center mt-5">
-      {CardsData.map((card) => {
-        return (
-          <PopularityCard
-            id={card.id}
-            imageURL={card.imageURL}
-            title={card.title}
-            desc={card.desc}
-          />
-        );
-      })}
-
+        {CardsData.map((card) => {
+          return (
+            <PopularityCard
+              key={card.id}
+              id={card.id}
+              imageURL={card.imageURL}
+              title={card.title}
+              desc={card.desc}
+            />
+          );
+        })}
       </div>
     </div>
   );
