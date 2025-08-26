@@ -11,20 +11,20 @@ const CreateLessons = () => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [editId, setEditId] = useState(null);
-  const [courses, setCourses] = useState([])
-  const [topics, setTopics] = useState([])
-  const [courseID, setCourseID] = useState("")
-  const [topicID, setTopicID] = useState("")
+  const [courses, setCourses] = useState([]);
+  const [topics, setTopics] = useState([]);
+  const [courseID, setCourseID] = useState("");
+  const [topicID, setTopicID] = useState("");
 
   const formRef = useRef();
 
-   const fetchCourses = async () => {
+  const fetchCourses = async () => {
     try {
       const res = await api.get("/courses");
       const res2 = await api.get("/topics");
 
       setCourses(res.data);
-      setTopics(res2.data)
+      setTopics(res2.data);
     } catch (err) {
       console.error("Error fetching lessons");
     }
@@ -110,6 +110,18 @@ const CreateLessons = () => {
     });
   };
 
+  const getAffiliatedCourses = async (topicID) => {
+    const topicCourseID = await api.get(`/topics/${topicID}`);
+    
+
+ const courseID = topicCourseID.data.course
+    console.log(topicCourseID.data.course);
+
+     const course = await api.get(`/courses/${courseID}`);
+
+        console.log(course);
+  };
+
   return (
     <div className="max-w-6xl mx-auto p-6 bg-white mt-10 mb-20 rounded shadow-sm">
       <div ref={formRef}>
@@ -138,7 +150,7 @@ const CreateLessons = () => {
             <select
               name="course"
               value={courseID}
-              onChange={(e)=> setCourseID(e.target.value)}
+              onChange={(e) => setCourseID(e.target.value)}
               className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300"
               required
             >
@@ -151,12 +163,12 @@ const CreateLessons = () => {
             </select>
           </div>
 
-           <div>
+          <div>
             <label className="block font-medium mb-1">Select Topic</label>
             <select
               name="topic"
               value={topicID}
-              onChange={(e)=> setTopicID(e.target.value)}
+              onChange={(e) => setTopicID(e.target.value)}
               className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300"
               required
             >
@@ -224,7 +236,7 @@ const CreateLessons = () => {
       </div>
 
       {/* Lesson Table */}
-       <div className="mt-12">
+      <div className="mt-12">
         <h3 className="text-2xl font-semibold mb-4 text-gray-800">
           Created Courses
         </h3>
@@ -236,7 +248,8 @@ const CreateLessons = () => {
               <thead className="bg-gray-100 text-gray-700">
                 <tr>
                   <th className="border px-4 py-2">Title</th>
-                  <th className="border px-4 py-2">Linked to</th>
+                  <th className="border px-4 py-2">Linked Topic</th>
+                  <th className="border px-4 py-2">Linked Course</th>
                   <th className="border px-4 py-2">Actions</th>
                 </tr>
               </thead>
@@ -244,6 +257,7 @@ const CreateLessons = () => {
                 {lessons.map((lesson) => (
                   <tr key={lesson._id}>
                     <td className="border px-4 py-2">{lesson.title}</td>
+                    <td className="border px-4 py-2">{lesson.topic.title}</td>
                     <td className="border px-4 py-2">{lesson.topic.title}</td>
                     <td className="border px-4 py-2 space-x-2">
                       <button
@@ -254,7 +268,7 @@ const CreateLessons = () => {
                       </button>
                       <button
                         className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600"
-                        onClick={() => handleEdit(topic)}
+                        onClick={() => getAffiliatedCourses(lesson.topic._id)}
                       >
                         Edit
                       </button>
@@ -271,7 +285,7 @@ const CreateLessons = () => {
             </table>
           </div>
         )}
-      </div> 
+      </div>
     </div>
   );
 };
