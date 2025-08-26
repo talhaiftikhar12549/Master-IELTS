@@ -4,8 +4,8 @@ import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 const paymentCardData = [
   {
     title: "Premium",
-    actualPrice: "$40",
-    discPrice: "$30",
+    actualPrice: "40",
+    discPrice: "30",
     offer: "Special Offer",
     desc: [
       "All features from Standard",
@@ -19,8 +19,8 @@ const paymentCardData = [
   },
 
   {
-    title: "Premium",
-    actualPrice: "$35",
+    title: "Standard",
+    actualPrice: "35",
     discPrice: "",
     offer: "",
     desc: [
@@ -41,7 +41,7 @@ const ChooseCourse = () => {
         <span className="text-[#0554F2]">Choose</span> Your Course
       </h2>
 
-      <div className="w-2/3 flex justify-center items-start space-x-5 ">
+      <div className="w-2/3 flex justify-center items-start space-x-5 mt-5">
         {paymentCardData.map((card, index) => {
           return (
             <PaymentCard
