@@ -8,29 +8,27 @@ export const Lesson = () => {
   const { courseSlug } = useParams();
   const [activeTab, setActiveTab] = useState("lesson");
 
-  const {desiredLesson, singleCourseID} = useOutletContext()
+  const { desiredLesson, singleCourseID } = useOutletContext();
 
   let lesson = desiredLesson;
 
-  console.log(desiredLesson)
+  console.log(desiredLesson);
 
-    const getTopics = async ()=> {
+  const getTopics = async () => {
     try {
       // const res = await api.get(`/lessons/${singleLesson._id}`);
       // console.log("getting single topic",res.data);
-      
     } catch (err) {
-      console.log("some error occured while getting Topics data", err)
+      console.log("some error occured while getting Topics data", err);
     }
-  }
+  };
 
   // /:courseId/:lessonId/:topicId
 
   //   useEffect(() => {
   //   getTopics();
   // }, [desiredLesson]);
-  
- 
+
   if (!lesson) {
     return <p className="text-blue-500">Loading...</p>;
   }
@@ -92,16 +90,14 @@ export const Lesson = () => {
 
           <div className="mt-5">
             <h2 className="text-xl font-bold mb-2">Lesson Description:</h2>
-            <p>
-              {lesson.content}
-              </p>
+           {lesson.content}
           </div>
         </div>
       )}
 
       {activeTab === "qa" && (
         <div>
-          <LessonComments  />
+          <LessonComments />
         </div>
       )}
     </div>

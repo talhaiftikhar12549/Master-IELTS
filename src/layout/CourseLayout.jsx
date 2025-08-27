@@ -7,6 +7,8 @@ export const CourseLayout = () => {
 
   const getCourses = async () => {
     const res = await api.get("/courses");
+    console.log("courses from course layout page", res.data);
+    
     setCoursesData(res.data);
   };
 

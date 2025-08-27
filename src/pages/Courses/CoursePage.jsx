@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import reading from "../../assets/Courses/reading-course.jpeg";
-import { NavLink, Outlet, useParams, useOutletContext  } from "react-router-dom";
+import { NavLink, Outlet, useParams, useOutletContext } from "react-router-dom";
 import { FaAngleLeft } from "react-icons/fa";
+import api from "../../services/api";
 
 // export const courseData = {
 //   reading: [
@@ -60,45 +61,47 @@ import { FaAngleLeft } from "react-icons/fa";
 
 export const CoursePage = () => {
   const [openIndex, setOpenIndex] = useState(null);
-  const {courseSlug, lessonSlug } = useParams();
+  const { courseSlug, lessonSlug } = useParams();
 
-  const [singleCourse, setSingleCourse] = useState(null);
-  const [singleLesson, setSingleLesson] = useState([])
+  const [singleLesson, setSingleLesson] = useState([]);
+  const [completeCourseData, setCompleteCourseData] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-   const coursesData = useOutletContext()
+  const coursesData = useOutletContext();
 
   const getSelectedCourse = async () => {
-    const desiredCourse = coursesData?.find((c)=> courseSlug === c.title.toLowerCase() )
-    setSingleCourse(desiredCourse);
+    setLoading(true);
+    const desiredCourse = coursesData?.find(
+      (c) => courseSlug === c.title.toLowerCase()
+    );
+
+    if (desiredCourse) {
+      const res = await api.get(`/courses/${desiredCourse._id}`);
+      setCompleteCourseData(res.data);
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
     getSelectedCourse();
-  }, [coursesData]);
-
+  }, [ coursesData]);
 
   const toggleAccordion = (index) => {
     setOpenIndex(openIndex === index ? null : index);
   };
-  
 
-  const topics =  singleCourse?.topics;
-
-  console.log(singleCourse);
-  
-
-  if (!topics) {
+  if (loading) {
     return (
       <div className="text-center mt-10 text-blue-500 font-bold">
-       Loading...
+        Loading...
       </div>
     );
   }
 
-  if (lessonSlug) {
+  if (!loading && lessonSlug) {
     return (
       <div className="w-full max-w-4xl mx-auto mt-10">
-        <Outlet context={{desiredLesson: singleLesson}} />
+        <Outlet context={{ desiredLesson: singleLesson }} />
       </div>
     );
   }
@@ -123,35 +126,37 @@ export const CoursePage = () => {
       <div className="w-full space-y-4">
         <h3 className="text-xl font-semibold mb-4">Topics</h3>
 
-        {topics.map((topic, index) => (
-          <div key={index} className="border rounded-md shadow-sm">
-            <button
-              className="w-full text-left px-4 py-3 bg-gray-100 hover:bg-gray-200 font-medium"
-              onClick={() => toggleAccordion(index)}
-            >
-              {topic.title}
-            </button>
+        {loading? (
+          <div>Loading</div>
+        ) : (
+          <>
+            {completeCourseData.length !== 0 && completeCourseData.topics.map((topic, index) => (
+              <div key={index} className="border rounded-md shadow-sm">
+                <button
+                  className="w-full text-left px-4 py-3 bg-gray-100 hover:bg-gray-200 font-medium"
+                  onClick={() => toggleAccordion(index)}
+                >
+                  {topic.title}
+                </button>
 
-{console.log(topic)
-                }
-
-            {openIndex === index && (
-              <div className="px-6 py-3 space-y-2 bg-white flex flex-col">
-                
-                {topic.map((lesson, idx) => (
-                  <NavLink
-                  onClick={()=> setSingleLesson(lesson)}
-                    to={`${lesson.title}`}
-                    key={idx}
-                    className="text-blue-600 hover:underline cursor-pointer"
-                  >
-                    {lesson.title}
-                  </NavLink>
-                ))}
+                {openIndex === index && (
+                  <div className="px-6 py-3 space-y-2 bg-white flex flex-col">
+                    {topic.lessons.map((lesson, idx) => (
+                      <NavLink
+                        onClick={() => setSingleLesson(lesson)}
+                        to={`${lesson.title}`}
+                        key={idx}
+                        className="text-blue-600 hover:underline cursor-pointer"
+                      >
+                        {lesson.title}
+                      </NavLink>
+                    ))}
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-        ))}
+            ))}
+          </>
+        )}
       </div>
     </div>
   );

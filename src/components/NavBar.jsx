@@ -1,13 +1,17 @@
 import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { FaBars, FaTimes } from "react-icons/fa";
 import logo from "../assets/logos/master-ielts-logo.png"
+import { useAuth } from "../context/AuthContext";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // mock login state
+
+  const navigate = useNavigate()
 
   const toggleMenu = () => setIsOpen(!isOpen);
+
+  const {isAuthenticated, logout} = useAuth()  
 
   // Reusable NavLink styles
   const linkClasses = ({ isActive }) =>
@@ -15,11 +19,19 @@ const Navbar = () => {
       isActive ? "text-[#0554F2] font-semibold" : "text-gray-700"
     }`;
 
+    const handleAuth = ()=> {
+      if (isAuthenticated) {
+        logout()
+      } else {
+        navigate("/login")
+      }
+    }
+
   return (
     <nav className="w-full bg-white shadow-md fixed top-0 left-0 z-50">
       <div className="w-2/3 mx-auto px-6 py-4 flex justify-between items-center">
         {/* Logo */}
-        <NavLink to="/" className="text-2xl font-bold text-[#0554F2]">
+        <NavLink to="/" className="text-2xl font-bold text-[#0554F2] cursor-pointer">
           <img src={logo} alt="master ielts logo" className="w-24" />
         </NavLink>
 
@@ -57,16 +69,16 @@ const Navbar = () => {
           </li>
           <li>
             <button
-              onClick={() => setIsLoggedIn(!isLoggedIn)}
-              className="hover:text-[#0554F2] transition text-gray-700"
+              onClick={handleAuth}
+              className="hover:text-[#0554F2] transition text-gray-700 cursor-pointer"
             >
-              {isLoggedIn ? "Logout" : "Login"}
+              {isAuthenticated ? "Logout" : "Login"}
             </button>
           </li>
         </ul>
 
         {/* Mobile Hamburger Icon */}
-        <div className="md:hidden text-2xl text-gray-700" onClick={toggleMenu}>
+        <div className="md:hidden text-2xl text-gray-700 cursor-pointer" onClick={toggleMenu}>
           {isOpen ? <FaTimes /> : <FaBars />}
         </div>
       </div>
@@ -86,7 +98,7 @@ const Navbar = () => {
               </NavLink>
             </li>
             <li>
-              <NavLink to="/courses" className={linkClasses} onClick={toggleMenu}>
+              <NavLink to="/all-courses" className={linkClasses} onClick={toggleMenu}>
                 Courses
               </NavLink>
             </li>
@@ -108,12 +120,12 @@ const Navbar = () => {
             <li>
               <button
                 onClick={() => {
-                  setIsLoggedIn(!isLoggedIn);
+                  handleAuth();
                   toggleMenu();
                 }}
-                className="hover:text-[#0554F2] transition text-gray-700"
+                className="hover:text-[#0554F2] transition text-gray-700 cursor-pointer"
               >
-                {isLoggedIn ? "Logout" : "Login"}
+                {isAuthenticated ? "Logout" : "Login"}
               </button>
             </li>
           </ul>
