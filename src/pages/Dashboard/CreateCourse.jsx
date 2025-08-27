@@ -1,31 +1,33 @@
-import { useState, useEffect, useRef } from 'react';
-import api from '../../services/api';
+import { useState, useEffect, useRef } from "react";
+import api from "../../services/api";
+import { FaRegEdit, FaRegEye } from "react-icons/fa";
+import { AiOutlineDelete } from "react-icons/ai";
 
 const CreateCourse = () => {
   const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    level: '',
-    duration: '',
-    price: '',
-    thumbnail: '',
-    status: 'Draft',
-    tags: '',
+    title: "",
+    description: "",
+    level: "",
+    duration: "",
+    price: "",
+    thumbnail: "",
+    status: "Draft",
+    tags: "",
   });
 
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
   const [editId, setEditId] = useState(null);
 
   const formRef = useRef();
 
   const fetchCourses = async () => {
     try {
-      const res = await api.get('/courses');
+      const res = await api.get("/courses");
       setCourses(res.data);
     } catch (err) {
-      console.error('Error fetching courses');
+      console.error("Error fetching courses");
     }
   };
 
@@ -40,14 +42,14 @@ const CreateCourse = () => {
 
   const resetForm = () => {
     setFormData({
-      title: '',
-      description: '',
-      level: '',
-      duration: '',
-      price: '',
-      thumbnail: '',
-      status: 'Draft',
-      tags: '',
+      title: "",
+      description: "",
+      level: "",
+      duration: "",
+      price: "",
+      thumbnail: "",
+      status: "Draft",
+      tags: "",
     });
     setEditId(null);
   };
@@ -55,40 +57,40 @@ const CreateCourse = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setMessage('');
+    setMessage("");
 
     const payload = {
       ...formData,
       price: parseFloat(formData.price),
-      tags: formData.tags.split(',').map((tag) => tag.trim()),
+      tags: formData.tags.split(",").map((tag) => tag.trim()),
     };
 
     try {
       if (editId) {
         await api.put(`/courses/${editId}`, payload);
-        setMessage('Course updated successfully!');
+        setMessage("Course updated successfully!");
       } else {
-        await api.post('/courses', payload);
-        setMessage('Course created successfully!');
+        await api.post("/courses", payload);
+        setMessage("Course created successfully!");
       }
 
       resetForm();
       fetchCourses();
     } catch (error) {
-      setMessage('Error saving course.');
+      setMessage("Error saving course.");
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this course?')) return;
+    if (!window.confirm("Are you sure you want to delete this course?")) return;
 
     try {
       await api.delete(`/courses/${id}`);
       fetchCourses();
     } catch (err) {
-      alert('Failed to delete course');
+      alert("Failed to delete course");
     }
   };
 
@@ -101,30 +103,38 @@ const CreateCourse = () => {
       price: course.price.toString(),
       thumbnail: course.thumbnail,
       status: course.status,
-      tags: course.tags.join(', '),
+      tags: course.tags.join(", "),
     });
     setEditId(course._id);
-    window.scrollTo({ top: formRef.current.offsetTop - 100, behavior: 'smooth' });
+    window.scrollTo({
+      top: formRef.current.offsetTop - 100,
+      behavior: "smooth",
+    });
   };
 
   return (
     <div className="max-w-6xl mx-auto p-6 bg-white mt-10 mb-20 rounded shadow-sm">
       <div ref={formRef}>
         <h2 className="text-3xl font-bold mb-6 text-gray-800">
-          {editId ? 'Edit Course' : 'Create Course'}
+          {editId ? "Edit Course" : "Create Course"}
         </h2>
 
         {message && (
           <div
             className={`mb-4 p-3 rounded text-sm ${
-              message.includes('success') ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+              message.includes("success")
+                ? "bg-green-100 text-green-700"
+                : "bg-red-100 text-red-700"
             }`}
           >
             {message}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <form
+          onSubmit={handleSubmit}
+          className="grid grid-cols-1 md:grid-cols-2 gap-6"
+        >
           <div>
             <label className="block font-medium mb-1">Title</label>
             <input
@@ -196,7 +206,9 @@ const CreateCourse = () => {
           </div>
 
           <div className="md:col-span-2">
-            <label className="block font-medium mb-1">Tags (comma separated)</label>
+            <label className="block font-medium mb-1">
+              Tags (comma separated)
+            </label>
             <input
               type="text"
               name="tags"
@@ -223,11 +235,17 @@ const CreateCourse = () => {
               disabled={loading}
               className={`px-6 py-2 text-white font-semibold rounded ${
                 loading
-                  ? 'bg-blue-300 cursor-not-allowed'
-                  : 'bg-blue-600 hover:bg-blue-700'
+                  ? "bg-blue-300 cursor-not-allowed"
+                  : "bg-blue-600 hover:bg-blue-700"
               }`}
             >
-              {loading ? (editId ? 'Updating...' : 'Creating...') : editId ? 'Update Course' : 'Create Course'}
+              {loading
+                ? editId
+                  ? "Updating..."
+                  : "Creating..."
+                : editId
+                ? "Update Course"
+                : "Create Course"}
             </button>
             {editId && (
               <button
@@ -244,7 +262,9 @@ const CreateCourse = () => {
 
       {/* Course Table */}
       <div className="mt-12">
-        <h3 className="text-2xl font-semibold mb-4 text-gray-800">Created Courses</h3>
+        <h3 className="text-2xl font-semibold mb-4 text-gray-800">
+          Created Courses
+        </h3>
         {courses.length === 0 ? (
           <p className="text-gray-500">No courses found.</p>
         ) : (
@@ -269,24 +289,20 @@ const CreateCourse = () => {
                     <td className="border px-4 py-2">${course.price}</td>
                     <td className="border px-4 py-2">{course.status}</td>
                     <td className="border px-4 py-2 space-x-2">
-                      <button
-                        className="bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600"
-                        onClick={() => alert(`Viewing: ${course._id}`)}
-                      >
-                        View
-                      </button>
-                      <button
-                        className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600"
-                        onClick={() => handleEdit(course)}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        className="bg-red-600 text-white px-2 py-1 rounded hover:bg-red-700"
-                        onClick={() => handleDelete(course._id)}
-                      >
-                        Delete
-                      </button>
+                      <div className="flex items-center space-x-2">
+                        {/* <FaRegEye
+                          className="cursor-pointer text-blue-600 hover:text-blue-800"
+                           onClick={() => alert(`Viewing: ${course._id}`)}
+                        /> */}
+                        <FaRegEdit
+                          className="cursor-pointer text-yellow-600 hover:text-yellow-800"
+                          onClick={() => handleEdit(course)}
+                        />
+                        <AiOutlineDelete
+                          className="cursor-pointer text-red-600 hover:text-red-800"
+                          onClick={() => handleDelete(course._id)}
+                        />
+                      </div>
                     </td>
                   </tr>
                 ))}

@@ -1,25 +1,28 @@
 import { useState, useEffect, useRef } from "react";
 import api from "../../services/api";
 import { useNavigate } from "react-router-dom";
+import { FaRegEdit } from "react-icons/fa";
+import { FaRegEye } from "react-icons/fa";
+import { AiOutlineDelete } from "react-icons/ai";
 
 const CreateTopics = () => {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-  });
 
-  const navigate = useNavigate()
+  });
+  const navigate = useNavigate();
 
   const [topics, setTopics] = useState([]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [editId, setEditId] = useState(null);
-  const [courses, setCourses] = useState([])
-  const [courseID, setCourseID] = useState("")
+  const [courses, setCourses] = useState([]);
+  const [courseID, setCourseID] = useState("");
 
   const formRef = useRef();
 
-   const fetchCourses = async () => {
+  const fetchCourses = async () => {
     try {
       const res = await api.get("/courses");
       setCourses(res.data);
@@ -137,7 +140,7 @@ const CreateTopics = () => {
               type="text"
               name="title"
               value={courseID}
-              onChange={(e)=> setCourseID(e.target.value)}
+              onChange={(e) => setCourseID(e.target.value)}
               className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300"
               required
             >
@@ -205,9 +208,9 @@ const CreateTopics = () => {
       </div>
 
       {/* Topic Table */}
-       <div className="mt-12">
+      <div className="mt-12">
         <h3 className="text-2xl font-semibold mb-4 text-gray-800">
-          Created Courses
+          Created Topics
         </h3>
         {topics.length === 0 ? (
           <p className="text-gray-500">No topics found.</p>
@@ -217,7 +220,7 @@ const CreateTopics = () => {
               <thead className="bg-gray-100 text-gray-700">
                 <tr>
                   <th className="border px-4 py-2">Title</th>
-                  <th className="border px-4 py-2">Linked to</th>
+                  <th className="border px-4 py-2">Course</th>
                   <th className="border px-4 py-2">Actions</th>
                 </tr>
               </thead>
@@ -227,24 +230,23 @@ const CreateTopics = () => {
                     <td className="border px-4 py-2">{topic.title}</td>
                     <td className="border px-4 py-2">{topic.course.title}</td>
                     <td className="border px-4 py-2 space-x-2">
-                      <button
-                        className="bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600"
-                        onClick={() => navigate(`/course/${topic.course.title.toLowerCase()}`)}
-                      >
-                        View
-                      </button>
-                      <button
-                        className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600"
-                        onClick={() => handleEdit(topic)}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        className="bg-red-600 text-white px-2 py-1 rounded hover:bg-red-700"
-                        onClick={() => handleDelete(topic._id)}
-                      >
-                        Delete
-                      </button>
+                      <div className="flex items-center space-x-2">
+                        {/* <FaRegEye
+                        className="cursor-pointer text-blue-600 hover:text-blue-800"
+                          onClick={() =>
+                            navigate(
+                              `/course/${topic.course.title.toLowerCase()}`
+                            )
+                          }
+                        /> */}
+                        <FaRegEdit 
+                        className="cursor-pointer text-yellow-600 hover:text-yellow-800"
+                        onClick={() => handleEdit(topic)} />
+                        <AiOutlineDelete
+                        className="cursor-pointer text-red-600 hover:text-red-800"
+                          onClick={() => handleDelete(topic._id)}
+                        />
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -252,7 +254,7 @@ const CreateTopics = () => {
             </table>
           </div>
         )}
-      </div> 
+      </div>
     </div>
   );
 };

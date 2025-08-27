@@ -15,34 +15,43 @@ import { AuthProvider } from "./context/AuthContext";
 import Register from "./pages/auth/Register";
 import CreateTopics from "./pages/Dashboard/CreateTopics";
 import CreateLessons from "./pages/Dashboard/CreateLessons";
+import ProtectedRoute from "./services/ProtectedRoute";
 
 function App() {
   return (
     <AuthProvider>
-    <Routes>
-      <Route path="/" element={<MainLayout />}>
-        <Route index element={<Home />} />
-         <Route path="login" element={<Login />} />
-         <Route path="register" element={<Register />} />
-
-      </Route>
-
-      <Route path="/dashboard" element={<DashboardLayout />}>
-        <Route index element={<DashboardHome />} />
-        <Route path="quiz-builder" element={<QuizBuilder />} />
-        <Route path="create-course" element={<CreateCourse />} />
-        <Route path="create-topics" element={<CreateTopics />} />
-        <Route path="create-lessons" element={<CreateLessons />} />
-      </Route>
-
-      <Route path="/all-courses" element={<AllCourses />} />
-      <Route path="/course" element={<CourseLayout />}>
-        <Route path=":courseSlug" element={<CoursePage />}>
-          <Route path=":lessonSlug" element={<Lesson />} />
+      <Routes>
+        <Route path="/" element={<MainLayout />}>
+          <Route index element={<Home />} />
+          <Route path="login" element={<Login />} />
+          <Route path="register" element={<Register />} />
         </Route>
-      </Route>
-      
-    </Routes>
+
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute allowedRoles={["superadmin","admin","student"]}>
+              <DashboardLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<DashboardHome />} />
+          <Route path="quiz-builder" element={<QuizBuilder />} />
+          <Route path="create-course" element={<CreateCourse />} />
+          <Route path="create-topics" element={<CreateTopics />} />
+          <Route path="create-lessons" element={<CreateLessons />} />
+        </Route>
+
+
+
+          
+        <Route path="/all-courses" element={<AllCourses />} />
+        <Route path="/course" element={<CourseLayout />}>
+          <Route path=":courseSlug" element={<CoursePage />}>
+            <Route path=":lessonSlug" element={<Lesson />} />
+          </Route>
+        </Route>
+      </Routes>
     </AuthProvider>
   );
 }

@@ -4,7 +4,6 @@ import api from "../../services/api";
 
 export const AllCourses = () => {
   const [coursesData, setCoursesData] = useState(null);
-
   const getCourses = async () => {
     const res = await api.get("/courses");
     setCoursesData(res.data);
