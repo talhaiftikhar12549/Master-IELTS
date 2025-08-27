@@ -43,9 +43,10 @@ const CreateTopics = () => {
       console.error("Error fetching topics");
     }
   };
+  
 
   useEffect(() => {
-    fetchTopics();
+      fetchTopics();
   }, []);
 
   const handleChange = (e) => {
