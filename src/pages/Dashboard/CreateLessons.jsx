@@ -1,10 +1,18 @@
 import { useState, useEffect, useRef } from "react";
 import api from "../../services/api";
+import ReactQuill from "react-quill-new";
+import "react-quill-new/dist/quill.snow.css";
+import { AiOutlineDelete } from "react-icons/ai";
+import { FaRegEdit, FaRegEye } from "react-icons/fa";
 
 const CreateLessons = () => {
   const [formData, setFormData] = useState({
     title: "",
-    description: "",
+    // description: "",
+    type: "video",
+    videoUrl: "",
+    resources: "",
+    content: "",
   });
 
   const [lessons, setLessons] = useState([]);
@@ -17,7 +25,6 @@ const CreateLessons = () => {
   const [topicID, setTopicID] = useState("");
 
   const formRef = useRef();
-
   const fetchCourses = async () => {
     try {
       const res = await api.get("/courses");
@@ -55,8 +62,14 @@ const CreateLessons = () => {
   const resetForm = () => {
     setFormData({
       title: "",
-      description: "",
+      // description: "",
+      type: "video",
+      videoUrl: "",
+      resources: "",
+      content: "",
     });
+    setCourseID("");
+    setTopicID("");
     setEditId(null);
   };
 
@@ -67,6 +80,7 @@ const CreateLessons = () => {
 
     const payload = {
       ...formData,
+      topic: topicID,
     };
 
     try {
@@ -98,30 +112,28 @@ const CreateLessons = () => {
     }
   };
 
-  const handleEdit = (topic) => {
+  const handleEdit = async (lesson) => {
+    const selectedTopic = topics.find((t) => t._id === lesson.topic._id);
+    const affiliatedCourseID = selectedTopic?.course?._id || "";
+    setTopicID(selectedTopic?._id || "");
+    setCourseID(affiliatedCourseID);
     setFormData({
-      title: topic.title,
-      description: topic.description,
+      topic: lesson.topic._id,
+      title: lesson.title,
+      description: lesson.description || "",
+      type: lesson.type || "video",
+      videoUrl: lesson.videoUrl || "",
+      resources: lesson.resources?.join(", ") || "",
+      content: lesson.content || "",
     });
-    setEditId(topic._id);
+    // setTopicID(selectedTopic?._id || "");
+    // setCourseID(affiliatedCourseID);
+    setEditId(lesson._id);
+
     window.scrollTo({
       top: formRef.current.offsetTop - 100,
       behavior: "smooth",
     });
-  };
-
-  const getAffiliatedCourses = async (topicID) => {
-    const topicCourseID = await api.get(`/topics/${topicID}`);
-    
-
- const courseID = topicCourseID.data.course
-    console.log(topicCourseID.data.course);
-
-     const course = await api.get(`/courses/${courseID}`);
-
-     const affiliatedCourseTitle = course.data.title
-
-        console.log(course.data.title);
   };
 
   return (
@@ -143,96 +155,144 @@ const CreateLessons = () => {
           </div>
         )}
 
-        <form
-          onSubmit={handleSubmit}
-          className="grid grid-cols-1 md:grid-cols-2 gap-6"
-        >
-          <div>
-            <label className="block font-medium mb-1">Select Course</label>
-            <select
-              name="course"
-              value={courseID}
-              onChange={(e) => setCourseID(e.target.value)}
-              className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300"
-              required
-            >
-              <option value="">-- Select Course --</option>
-              {courses.map((course) => (
-                <option key={course._id} value={course._id}>
-                  {course.title}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div>
-            <label className="block font-medium mb-1">Select Topic</label>
-            <select
-              name="topic"
-              value={topicID}
-              onChange={(e) => setTopicID(e.target.value)}
-              className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300"
-              required
-            >
-              <option value="">-- Select Topic --</option>
-              {topics.map((topic) => (
-                <option key={topic._id} value={topic._id}>
-                  {topic.title}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div>
-            <label className="block font-medium mb-1">Title</label>
-            <input
-              type="text"
-              name="title"
-              value={formData.title}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300"
-              required
-            />
-          </div>
-
-          <div className="md:col-span-2">
-            <label className="block font-medium mb-1">Description</label>
-            <textarea
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
-              rows={3}
-              className="w-full border border-gray-300 rounded px-3 py-2"
-            ></textarea>
-          </div>
-
-          <div className="md:col-span-2 mt-2">
-            <button
-              type="submit"
-              disabled={loading}
-              className={`px-6 py-2 text-white font-semibold rounded ${
-                loading
-                  ? "bg-blue-300 cursor-not-allowed"
-                  : "bg-blue-600 hover:bg-blue-700"
-              }`}
-            >
-              {loading
-                ? editId
-                  ? "Updating..."
-                  : "Creating..."
-                : editId
-                ? "Update Lesson"
-                : "Create Lesson"}
-            </button>
-            {editId && (
-              <button
-                type="button"
-                onClick={resetForm}
-                className="ml-4 text-gray-600 underline hover:text-gray-800"
+        <form onSubmit={handleSubmit}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block font-medium mb-1">Select Course</label>
+              <select
+                name="course"
+                value={courseID}
+                onChange={(e) => setCourseID(e.target.value)}
+                className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300"
+                required
               >
-                Cancel Edit
+                <option value="">-- Select Course --</option>
+                {courses.map((course) => (
+                  <option key={course._id} value={course._id}>
+                    {course.title}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block font-medium mb-1">Select Topic</label>
+              <select
+                name="topic"
+                value={topicID}
+                onChange={(e) => setTopicID(e.target.value)}
+                className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300"
+                required
+              >
+                <option value="">-- Select Topic --</option>
+                {topics
+                  .filter((topic) => topic.course?._id === courseID)
+                  .map((topic) => (
+                    <option key={topic._id} value={topic._id}>
+                      {topic.title}
+                    </option>
+                  ))}
+              </select>
+            </div>
+            {/* Title */}
+            <div>
+              <label className="block font-medium mb-1">Title</label>
+              <input
+                type="text"
+                name="title"
+                value={formData.title}
+                onChange={handleChange}
+                className="w-full border border-gray-300 rounded px-3 py-2"
+                required
+              />
+            </div>
+            {/* Type */}
+            <div>
+              <label className="block font-medium mb-1">Lesson Type</label>
+              <select
+                name="type"
+                value={formData.type}
+                onChange={handleChange}
+                className="w-full border border-gray-300 rounded px-3 py-2"
+              >
+                <option value="video">Video</option>
+                <option value="quiz">Quiz</option>
+              </select>
+            </div>
+
+            {/* Video URL */}
+            <div>
+              <label className="block font-medium mb-1">Video URL</label>
+              <input
+                type="text"
+                name="videoUrl"
+                value={formData.videoUrl}
+                onChange={handleChange}
+                className="w-full border border-gray-300 rounded px-3 py-2"
+                placeholder="https://youtube.com/..."
+              />
+            </div>
+            {/* Resources */}
+            <div className="md:col-span-2">
+              <label className="block font-medium mb-1">
+                Resources (comma separated)
+              </label>
+              <input
+                type="text"
+                name="resources"
+                value={formData.resources}
+                onChange={handleChange}
+                className="w-full border border-gray-300 rounded px-3 py-2"
+                placeholder="link1.pdf, link2.pdf, https://example.com"
+              />
+            </div>
+
+            {/* Content */}
+            <div className="md:col-span-2">
+              <label className="block font-medium mb-1">Content</label>
+              {/* <textarea
+                name="content"
+                value={formData.content}
+                onChange={handleChange}
+                rows={4}
+                className="w-full border border-gray-300 rounded px-3 py-2"
+              ></textarea> */}
+              <ReactQuill
+                theme="snow"
+                value={formData.content}
+                onChange={(value) =>
+                  setFormData((prev) => ({ ...prev, content: value }))
+                }
+                className="bg-white rounded"
+              />
+            </div>
+            <div>
+              <button
+                type="submit"
+                disabled={loading}
+                className={`px-6 py-2 text-white font-semibold rounded ${
+                  loading
+                    ? "bg-blue-300 cursor-not-allowed"
+                    : "bg-blue-600 hover:bg-blue-700"
+                }`}
+              >
+                {loading
+                  ? editId
+                    ? "Updating..."
+                    : "Creating..."
+                  : editId
+                  ? "Update Lesson"
+                  : "Create Lesson"}
               </button>
-            )}
+              {editId && (
+                <button
+                  type="button"
+                  onClick={resetForm}
+                  className="ml-4 text-gray-600 underline hover:text-gray-800"
+                >
+                  Cancel Edit
+                </button>
+              )}
+            </div>
           </div>
         </form>
       </div>
@@ -240,7 +300,7 @@ const CreateLessons = () => {
       {/* Lesson Table */}
       <div className="mt-12">
         <h3 className="text-2xl font-semibold mb-4 text-gray-800">
-          Created Courses
+          Created Lessons
         </h3>
         {lessons.length === 0 ? (
           <p className="text-gray-500">No lessons found.</p>
@@ -250,8 +310,7 @@ const CreateLessons = () => {
               <thead className="bg-gray-100 text-gray-700">
                 <tr>
                   <th className="border px-4 py-2">Title</th>
-                  <th className="border px-4 py-2">Linked Topic</th>
-                  <th className="border px-4 py-2">Linked Course</th>
+                  <th className="border px-4 py-2">Linked to</th>
                   <th className="border px-4 py-2">Actions</th>
                 </tr>
               </thead>
@@ -260,26 +319,21 @@ const CreateLessons = () => {
                   <tr key={lesson._id}>
                     <td className="border px-4 py-2">{lesson.title}</td>
                     <td className="border px-4 py-2">{lesson.topic.title}</td>
-                    <td className="border px-4 py-2">{lesson.topic.title}</td>
                     <td className="border px-4 py-2 space-x-2">
-                      <button
-                        className="bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600"
-                        onClick={() => alert(`Viewing: ${topic._id}`)}
-                      >
-                        View
-                      </button>
-                      <button
-                        className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600"
-                        onClick={() => getAffiliatedCourses(lesson.topic._id)}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        className="bg-red-600 text-white px-2 py-1 rounded hover:bg-red-700"
-                        onClick={() => handleDelete(topic._id)}
-                      >
-                        Delete
-                      </button>
+                      <div className="flex items-center space-x-2">
+                        {/* <FaRegEye
+                          className="cursor-pointer text-blue-600 hover:text-blue-800"
+                          onClick={() => alert(`Viewing: ${lesson._id}`)}
+                        /> */}
+                        <FaRegEdit
+                          className="cursor-pointer text-yellow-600 hover:text-yellow-800"
+                          onClick={() => handleEdit(lesson)}
+                        />
+                        <AiOutlineDelete
+                          className="cursor-pointer text-red-600 hover:text-red-800"
+                          onClick={() => handleDelete(lesson._id)}
+                        />
+                      </div>
                     </td>
                   </tr>
                 ))}
