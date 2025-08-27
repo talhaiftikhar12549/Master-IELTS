@@ -119,7 +119,9 @@ const CreateLessons = () => {
 
      const course = await api.get(`/courses/${courseID}`);
 
-        console.log(course);
+     const affiliatedCourseTitle = course.data.title
+
+        console.log(course.data.title);
   };
 
   return (

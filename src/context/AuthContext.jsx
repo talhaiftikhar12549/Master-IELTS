@@ -1,10 +1,11 @@
-import { createContext, useContext, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { loginUser, registerUser } from '../services/authService';
+import { createContext, useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { loginUser, registerUser } from "../services/authService";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
+  const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
@@ -14,15 +15,35 @@ export const AuthProvider = ({ children }) => {
     try {
       const userData = await loginUser(credentials);
 
-      setUser(userData);
-      localStorage.setItem('user', JSON.stringify(userData));
-
+      // setUser(userData);
+      setUser({
+        token: userData.token,
+        role: userData.role,
+        ...userData.user, // agar backend user object bhej raha hai
+      });
       setIsAuthenticated(true);
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          token: userData.token,
+          role: userData.role,
+          ...userData.user,
+        })
+      );
 
       // Redirect to either the protected page they tried to access or home
-      const redirectTo = userData.role === "admin" ? '/dashboard' : "/";
+      // const redirectTo = useruserData.role === "admin" ? "/dashboard" : "/";
 
-      navigate(redirectTo);
+      // navigate(redirectTo);
+      if (
+        userData.role === "superadmin" ||
+        userData.role === "admin" ||
+        userData.role === "student"
+      ) {
+        navigate("/dashboard");
+      } else {
+        navigate("/");
+      }
     } catch (error) {
       throw error;
     }
@@ -34,7 +55,7 @@ export const AuthProvider = ({ children }) => {
       const newUser = await registerUser(userData);
       setUser(newUser);
       setIsAuthenticated(true);
-      navigate('/');
+      navigate("/");
     } catch (error) {
       throw error;
     }
@@ -42,21 +63,22 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     // Clear token from localStorage if you're using it
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    localStorage.removeItem('role');
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    localStorage.removeItem("role");
     setUser(null);
     setIsAuthenticated(false);
-    navigate('/login');
+    navigate("/login");
   };
 
   useEffect(() => {
-  const savedUser = localStorage.getItem('user');
-  if (savedUser) {
-    setUser(JSON.parse(savedUser));
-    setIsAuthenticated(true);
-  }
-}, []);
+    const savedUser = localStorage.getItem("user");
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
+      setIsAuthenticated(true);
+    }
+    setLoading(false);
+  }, []);
 
   return (
     <AuthContext.Provider
@@ -65,7 +87,8 @@ export const AuthProvider = ({ children }) => {
         isAuthenticated,
         login,
         register,
-        logout
+        logout,
+        loading,
       }}
     >
       {children}

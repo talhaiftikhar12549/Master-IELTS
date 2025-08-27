@@ -1,7 +1,9 @@
 import { NavLink, useLocation } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 export const Sidebar = () => {
   const location = useLocation()
+  const {logout} = useAuth();
   
   const linkClasses = ({ isActive }) =>
     `w-full px-5 py-2 rounded-l-full transition duration-200 ${
@@ -56,7 +58,7 @@ export const Sidebar = () => {
       </div>
 
       <div className="w-full pr-5">
-        <button className="w-full bg-red-500 px-5 py-2 rounded text-white mb-10 cursor-pointer">
+        <button onClick={logout} className="w-full bg-red-500 px-5 py-2 rounded text-white mb-10 cursor-pointer">
           logout
         </button>
       </div>

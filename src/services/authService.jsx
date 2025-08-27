@@ -19,4 +19,7 @@ const loginUser = async (credentials) => {
   throw new Error('No token received');
 };
 
+
+
+
 export { registerUser, loginUser };
