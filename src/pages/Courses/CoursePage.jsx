@@ -84,7 +84,7 @@ export const CoursePage = () => {
 
   useEffect(() => {
     getSelectedCourse();
-  }, [ coursesData]);
+  }, [coursesData]);
 
   const toggleAccordion = (index) => {
     setOpenIndex(openIndex === index ? null : index);
@@ -101,7 +101,7 @@ export const CoursePage = () => {
   if (!loading && lessonSlug) {
     return (
       <div className="w-full max-w-4xl mx-auto mt-10">
-        <Outlet context={{ desiredLesson: singleLesson }} />
+        <Outlet />
       </div>
     );
   }
@@ -126,35 +126,47 @@ export const CoursePage = () => {
       <div className="w-full space-y-4">
         <h3 className="text-xl font-semibold mb-4">Topics</h3>
 
-        {loading? (
+        {loading ? (
           <div>Loading</div>
         ) : (
           <>
-            {completeCourseData.length !== 0 && completeCourseData.topics.map((topic, index) => (
-              <div key={index} className="border rounded-md shadow-sm">
-                <button
-                  className="w-full text-left px-4 py-3 bg-gray-100 hover:bg-gray-200 font-medium"
-                  onClick={() => toggleAccordion(index)}
-                >
-                  {topic.title}
-                </button>
+            {completeCourseData.length !== 0 &&
+              completeCourseData.topics.map((topic, index) => (
+                <div key={index} className="border rounded-md shadow-sm">
+                  <button
+                    className="w-full text-left px-4 py-3 bg-gray-100 hover:bg-gray-200 font-medium"
+                    onClick={() => toggleAccordion(index)}
+                  >
+                    {topic.title}
+                  </button>
 
-                {openIndex === index && (
-                  <div className="px-6 py-3 space-y-2 bg-white flex flex-col">
-                    {topic.lessons.map((lesson, idx) => (
-                      <NavLink
-                        onClick={() => setSingleLesson(lesson)}
-                        to={`${lesson.title}`}
-                        key={idx}
-                        className="text-blue-600 hover:underline cursor-pointer"
-                      >
-                        {lesson.title}
-                      </NavLink>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
+                  {openIndex === index && (
+                    <div className="px-6 py-3 space-y-2 bg-white flex flex-col">
+                      {topic.lessons.map((lesson) => {
+                        const slugify = (text) =>
+                          text
+                            .toString()
+                            .toLowerCase()
+                            .trim()
+                            .replace(/\s+/g, "-")
+                            .replace(/[^\w\-]+/g, "")
+                            .replace(/\-\-+/g, "-");
+
+                        return (
+                          <NavLink
+                            onClick={() => setSingleLesson(lesson)}
+                              to={`${slugify(lesson.title)}`}
+                            key={lesson._id}
+                            className="text-blue-600 hover:underline cursor-pointer"
+                          >
+                            {lesson.title}
+                          </NavLink>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              ))}
           </>
         )}
       </div>

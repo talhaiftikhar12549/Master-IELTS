@@ -1,35 +1,40 @@
 import { useEffect, useState } from "react";
-import { NavLink, useParams, useOutletContext } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 import { FaAngleLeft } from "react-icons/fa";
 import LessonComments from "../../../components/Courses/Lessons/LessonComments";
 import api from "../../../services/api";
 
 export const Lesson = () => {
-  const { courseSlug } = useParams();
+  const { courseSlug, lessonSlug } = useParams();
   const [activeTab, setActiveTab] = useState("lesson");
+  const [singleLessonData, setSingleLessonData] = useState([]);
 
-  const { desiredLesson, singleCourseID } = useOutletContext();
+  const getLesson = async () => {
+    // We are doing this to get the lesson data even when we reload the page
+    const res = await api.get(`/lessons`);
+    const filteredLessonData = res.data.find((lesson) => {
+      return (
+        lesson.title
+          .toString()
+          .toLowerCase()
+          .trim()
+          .replace(/\s+/g, "-")
+          .replace(/[^\w\-]+/g, "")
+          .replace(/\-\-+/g, "-") === lessonSlug
+      );
+    });
 
-  let lesson = desiredLesson;
-
-  console.log(desiredLesson);
-
-  const getTopics = async () => {
-    try {
-      // const res = await api.get(`/lessons/${singleLesson._id}`);
-      // console.log("getting single topic",res.data);
-    } catch (err) {
-      console.log("some error occured while getting Topics data", err);
-    }
+    setSingleLessonData(filteredLessonData);
+    console.log(filteredLessonData);
+    
   };
 
-  // /:courseId/:lessonId/:topicId
 
-  //   useEffect(() => {
-  //   getTopics();
-  // }, [desiredLesson]);
+  useEffect(()=> {
+    getLesson();
+  }, [])
 
-  if (!lesson) {
+  if (!singleLessonData) {
     return <p className="text-blue-500">Loading...</p>;
   }
 
@@ -71,15 +76,15 @@ export const Lesson = () => {
       {/* Tab Content */}
       {activeTab === "lesson" && (
         <div>
-          <h1 className="text-2xl font-bold mb-4">{lesson.title}</h1>
-          <p className="text-gray-600 mb-2">Type: {lesson.type}</p>
+          <h1 className="text-2xl font-bold mb-4">{singleLessonData.title}</h1>
+          <p className="text-gray-600 mb-2">Type: {singleLessonData.type}</p>
           <p className="text-gray-600 mb-4">Course: {courseSlug}</p>
 
-          {lesson.videoUrl !== "" && (
+          {singleLessonData.videoUrl !== "" && (
             <div className="aspect-video w-full">
               <iframe
                 className="w-full h-full rounded"
-                src={lesson.videoUrl}
+                src={singleLessonData.videoUrl}
                 title="YouTube video player"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 referrerPolicy="strict-origin-when-cross-origin"
@@ -90,7 +95,9 @@ export const Lesson = () => {
 
           <div className="mt-5">
             <h2 className="text-xl font-bold mb-2">Lesson Description:</h2>
-           {lesson.content}
+            <div
+              dangerouslySetInnerHTML={{ __html: singleLessonData.content }}
+            />
           </div>
         </div>
       )}
