@@ -11,9 +11,9 @@ const WhoFor = () => {
       </h2>
 
       {/* Content Wrapper */}
-      <div className="w-full lg:w-4/5 flex flex-col lg:flex-row justify-between items-center mt-12">
+      <div className="w-full lg:w-2/3 flex flex-col lg:flex-row justify-between items-center mt-12">
         {/* LHS */}
-        <div className="w-full lg:w-1/2 h-full flex flex-col justify-center space-y-8 lg:space-y-10 px-4 lg:px-10 py-10">
+        <div className="w-full lg:w-1/2 h-full flex flex-col justify-center space-y-8 lg:space-y-10 px-4 lg:px-0 py-10">
           <p className="text-gray-900 font-medium text-base md:text-lg">
             Are you aspiring to study abroad, pursue a career overseas, or
             immigrate to an English-speaking country? and having below issues as
