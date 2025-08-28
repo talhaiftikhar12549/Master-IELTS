@@ -104,7 +104,7 @@ export const Lesson = () => {
 
       {activeTab === "qa" && (
         <div>
-          <LessonComments />
+          <LessonComments lessonID={singleLessonData._id} />
         </div>
       )}
     </div>
