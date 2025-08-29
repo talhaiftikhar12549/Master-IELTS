@@ -57,6 +57,8 @@ const LessonComments = ({ lessonID }) => {
 
   // Update a top-level comment
   const handleUpdateComment = async (commentId) => {
+    console.log("editing comment text", editing.text);
+    
     try {
       const res = await api.put(`/discussion/comment/${commentId}`, {
         comment: editing.text,
@@ -75,7 +77,6 @@ const LessonComments = ({ lessonID }) => {
 
   // Delete a top-level comment
   const handleDeleteComment = async (commentId) => {
-
     try {
       await api.delete(`/discussion/comment/${commentId}`);
       setComments((prev) => prev.filter((c) => c._id !== commentId));

@@ -37,7 +37,7 @@ const Reviews = () => {
         <span className="text-[#0554F2]">What</span> Our Students Say
       </h2>
 
-      <div className="w-10/12 md:w-10-12 lg:w-2/3 mt-10 relative">
+      <div className="w-10/12 md:w-2/3 mt-10 relative">
         <Swiper
           modules={[Navigation, Pagination]}
           spaceBetween={20}

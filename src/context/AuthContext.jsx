@@ -18,6 +18,7 @@ export const AuthProvider = ({ children }) => {
       // setUser(userData);
       setUser({
         token: userData.token,
+        id: userData._id,
         role: userData.role,
         ...userData.user, // agar backend user object bhej raha hai
       });
@@ -26,6 +27,7 @@ export const AuthProvider = ({ children }) => {
         "user",
         JSON.stringify({
           token: userData.token,
+          id: userData._id,
           role: userData.role,
           ...userData.user,
         })

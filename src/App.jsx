@@ -16,6 +16,9 @@ import Register from "./pages/auth/Register";
 import CreateTopics from "./pages/Dashboard/CreateTopics";
 import CreateLessons from "./pages/Dashboard/CreateLessons";
 import ProtectedRoute from "./services/ProtectedRoute";
+import Posts from "./pages/Posts";
+import CommunityLayout from "./layout/CommunityLayout";
+import PostDetail from "./pages/PostDetail";
 
 function App() {
   return (
@@ -30,7 +33,7 @@ function App() {
         <Route
           path="/dashboard"
           element={
-            <ProtectedRoute allowedRoles={["superadmin","admin","student"]}>
+            <ProtectedRoute allowedRoles={["superadmin", "admin", "student"]}>
               <DashboardLayout />
             </ProtectedRoute>
           }
@@ -42,9 +45,11 @@ function App() {
           <Route path="create-lessons" element={<CreateLessons />} />
         </Route>
 
+        <Route element={<CommunityLayout />}>
+          <Route path="/posts" element={<Posts />} />
+          <Route path="/posts/:id" element={<PostDetail />} />
+        </Route>
 
-
-          
         <Route path="/all-courses" element={<AllCourses />} />
         <Route path="/course" element={<CourseLayout />}>
           <Route path=":courseSlug" element={<CoursePage />}>
