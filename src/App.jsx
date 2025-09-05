@@ -19,6 +19,7 @@ import ProtectedRoute from "./services/ProtectedRoute";
 import Posts from "./pages/Posts";
 import CommunityLayout from "./layout/CommunityLayout";
 import PostDetail from "./pages/PostDetail";
+import QuizAttempts from "./pages/Dashboard/QuizAttempts";
 
 function App() {
   return (
@@ -43,11 +44,12 @@ function App() {
           <Route path="create-course" element={<CreateCourse />} />
           <Route path="create-topics" element={<CreateTopics />} />
           <Route path="create-lessons" element={<CreateLessons />} />
+          <Route path="quiz-attempts" element={<QuizAttempts />} />
         </Route>
 
         <Route element={<CommunityLayout />}>
-          <Route path="/posts" element={<Posts />} />
-          <Route path="/posts/:id" element={<PostDetail />} />
+          <Route path="/community" element={<Posts />} />
+          <Route path="/community/:id" element={<PostDetail />} />
         </Route>
 
         <Route path="/all-courses" element={<AllCourses />} />

@@ -136,7 +136,7 @@ const PostDetail = () => {
     if (window.confirm("Are you sure you want to delete this post?")) {
       try {
         await api.delete(`/post/${post._id}`);
-        navigate("/posts");
+        navigate("/community");
       } catch (err) {
         console.error("Delete failed", err);
       }
@@ -172,7 +172,7 @@ if (!post) return <SinglePostSkeleton />;
   return (
     <div className="pt-20 pl-8 sm:pl-0 md:pl-14">
           <div className="w-full flex justify-between relative">
-            <CiCircleChevLeft onClick={()=> navigate("/posts")} className="absolute -left-10 text-[25px] text-gray-700 hover:text-gray-400 cursor-pointer" />
+            <CiCircleChevLeft onClick={()=> navigate("/community")} className="absolute -left-10 text-[25px] text-gray-700 hover:text-gray-400 cursor-pointer" />
             <div className="flex flex-col ">
               <p className="font-bold flex items-center gap-2">
                 {post.community}{" "}

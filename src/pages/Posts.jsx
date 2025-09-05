@@ -6,6 +6,7 @@ import { Helmet } from "react-helmet";
 import ForumPageSkeleton from "../components/Community/ForumsSkeleton";
 import { PostsCard } from "../components/Community/PostsCard";
 
+
 export default function Posts() {
   const [posts, setPosts] = useState([]);
   const [showModal, setShowModal] = useState(false);

@@ -54,7 +54,7 @@ export const PostsCard = ({ post, fetchPosts }) => {
     <div className="w-[100%] flex flex-col gap-4 border-b border-gray-300  cursor-pointer transition ">
       <div className="hover:bg-[#fdfdfb] border-[#dcdcdc] transition-colors duration-300 ease-in-out rounded-[10px] p-4 mb-[10px]">
         <div
-          onClick={() => navigate(`/posts/${post._id}`)}
+          onClick={() => navigate(`/community/${post._id}`)}
           className="flex-1"
         >
           <div className="w-full flex mb-4">
@@ -107,7 +107,7 @@ export const PostsCard = ({ post, fetchPosts }) => {
             <TbArrowBigUpFilled /> <p>{post.upvotes?.length || 0}</p>
           </div>
           <div
-            onClick={() => {user ? navigate(`/posts/${post._id}`) : navigate(`/login`)}}
+            onClick={() => {user ? navigate(`/community/${post._id}`) : navigate(`/login`)}}
             className="flex items-center space-x-2 text-black text-[14px] bg-gray-100 py-[4px] px-[10px] rounded-[5px] hover:text-orange-500 transition-colors duration-300 ease-in-out"
           >
             <FaMessage /> <p>{post.commentsCount || 0}</p>

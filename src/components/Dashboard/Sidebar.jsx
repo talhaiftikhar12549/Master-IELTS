@@ -44,7 +44,11 @@ export const Sidebar = () => {
           Enrolled Courses
         </NavLink>
 
-        <NavLink to="/quiz-attempts" className={linkClasses}>
+        <NavLink to="/community" className={linkClasses}>
+          Community
+        </NavLink>
+
+        <NavLink to="quiz-attempts" className={linkClasses}>
           Quiz Attempts
         </NavLink>
 
