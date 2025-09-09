@@ -5,7 +5,7 @@ const MainLayout = () => {
   return (
     <>
       <Navbar />
-      <main>
+      <main className="w-full flex flex-col items-center">
         <Outlet />
       </main>
     </>

@@ -37,6 +37,8 @@ const QuizAttempts = () => {
   const getQuizDetail = async (id) => {
     try {
       const res = await api.get(`/quizzes/${id}`);
+      console.log(res.data);
+      
       setSingleQuiz(res.data);
     } catch (error) {
       console.error("Error deleting attempt:", error);
@@ -138,12 +140,18 @@ const QuizAttempts = () => {
                   {singleQuiz?.questions?.length}
                 </p>
                 <hr className="my-4" />
-
-                {selectedAttempt.answers.length !== 0 &&
+                
+                
+                {selectedAttempt.answers.length !== 0 && singleQuiz &&
                   selectedAttempt.answers?.map((ans, idx) => {
+
+                    {console.log(singleQuiz)}
                     const q = singleQuiz?.questions.find(
                       (q) => q._id === ans.questionId
                     );
+
+                    
+                    
                     return (
                       <div key={ans._id} className="mb-4">
                         {q.type === "matchingHeadings" ? (

@@ -20,6 +20,11 @@ import Posts from "./pages/Posts";
 import CommunityLayout from "./layout/CommunityLayout";
 import PostDetail from "./pages/PostDetail";
 import QuizAttempts from "./pages/Dashboard/QuizAttempts";
+import BlogsPage from "./pages/BlogsPage";
+import CreateBlogs from "./pages/Dashboard/CreateBlogs";
+import NotFound from "./pages/NotFound";
+import SingleBlog from "./components/Blogs/SingleBlog";
+import Checkout from "./pages/Checkout";
 
 function App() {
   return (
@@ -27,9 +32,14 @@ function App() {
       <Routes>
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Home />} />
+          <Route path="blogs" element={<BlogsPage />} />
+          <Route path="/:slug" element={<SingleBlog />} />
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
+           <Route path="/checkout" element={<Checkout />} />
         </Route>
+
+         <Route path="/not-found" element={<NotFound />} />
 
         <Route
           path="/dashboard"
@@ -44,6 +54,7 @@ function App() {
           <Route path="create-course" element={<CreateCourse />} />
           <Route path="create-topics" element={<CreateTopics />} />
           <Route path="create-lessons" element={<CreateLessons />} />
+           <Route path="create-blogs" element={<CreateBlogs />} />
           <Route path="quiz-attempts" element={<QuizAttempts />} />
         </Route>
 
