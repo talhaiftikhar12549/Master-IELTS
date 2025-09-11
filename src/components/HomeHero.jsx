@@ -1,23 +1,31 @@
 import students from "../assets/Home/students.jpg";
 import Counter from "./Home/Hero/counter";
 
-const HomeHero = () => {
+const HomeHero = ({ chooseCourseRef }) => {
+  const handleScroll = () => {
+    chooseCourseRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
     <div className="w-full flex flex-col items-center justify-center bg-[#F3F8FF]">
       <div className="relative w-full flex flex-col lg:flex-row items-center justify-between overflow-hidden">
-        
         {/* LHS */}
         <div className="w-full lg:w-1/2 h-full flex flex-col justify-center space-y-8 px-6 lg:pl-12 lg:pr-10 py-16 pt-32 lg:pt-16 z-10">
           <h1 className="text-[38px] md:text-[48px] lg:text-[58px] leading-tight font-bold">
-            Get a 7+ IELTS band with proven, practical, and personalised coaching
+            Get a 7+ IELTS band with proven, practical, and personalised
+            coaching
           </h1>
 
           <p className="text-gray-900 font-medium text-base md:text-lg">
-            Access our all-in-one portal packed with expert-led courses, interactive quizzes, 
-            and practical exercises tailored to help you master the IELTS test.
+            Access our all-in-one portal packed with expert-led courses,
+            interactive quizzes, and practical exercises tailored to help you
+            master the IELTS test.
           </p>
 
-          <button className="w-fit px-8 py-3 text-white rounded-full bg-[#0554F2] hover:bg-blue-500/80 font-bold cursor-pointer transition-all">
+          <button
+            onClick={handleScroll}
+            className="w-fit px-8 py-3 text-white rounded-full bg-[#0554F2] hover:bg-blue-500/80 font-bold cursor-pointer transition-all"
+          >
             Let’s Ace it Together!
           </button>
         </div>

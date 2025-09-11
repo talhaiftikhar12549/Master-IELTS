@@ -24,7 +24,7 @@ export const BlogCard = ({ blog, handleDelete }) => {
         key={blog._id}
         aria-label={`Read more about ${blog.title}`}
         title={`Read more about ${blog.title}`}
-        className="group flex flex-col max-w-[413px] flex-1 cursor-pointer border-2 bg-[#FFFFFF] border-[#ffffff] hover:border-[#10b98133] rounded-xl p-4 shadow-sm transition duration-300 ease-in-out hover:-translate-y-2 hover:shadow-xl no-underline"
+        className="group flex flex-col max-w-[413px] flex-1 cursor-pointer border-2 bg-[#FFFFFF] border-[#ffffff] hover:border-blue-300 rounded-xl p-4 shadow-sm transition duration-300 ease-in-out hover:-translate-y-2 hover:shadow-xl no-underline"
       >
         <div>
           <img
@@ -47,7 +47,7 @@ export const BlogCard = ({ blog, handleDelete }) => {
             )}
           </p>
 
-          <h4 className="text-[18px] pt-[10px] font-[600] font-montserrat text-[#000000] group-hover:!text-[#10b981] duration-300 inline-flex items-center cursor-pointer mt-auto">
+          <h4 className="text-[18px] pt-[10px] font-[600] font-montserrat text-[#000000] group-hover:!text-blue-400 duration-300 inline-flex items-center cursor-pointer mt-auto">
             Read More
             <span className="sr-only"> about {blog.title}</span>
             <FaArrowRight className="ml-2" />

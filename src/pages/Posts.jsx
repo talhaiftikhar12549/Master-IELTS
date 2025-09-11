@@ -77,14 +77,14 @@ export default function Posts() {
       </Helmet>
 
       <div className="w-full lg:px-[40px] xl:px-0 px-[16px]">
-        <div className="w-full flex flex-col md:flex-row space-x-0 md:space-x-5 py-10 relative">
+        <div className="w-full flex flex-col md:flex-row md:justify-center space-x-0 md:space-x-5 py-10 relative">
           {/* Right panel: posts section */}
-          <div className="w-full space-y-4 flex flex-col items-center">
+          <div className="w-2/3 space-y-4 flex flex-col items-center">
             <div className="flex justify-end w-full mb-6">
               {user && (
                 <button
                   onClick={() => setShowModal(true)}
-                  className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-400 cursor-pointer"
+                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-400 cursor-pointer"
                 >
                   Create Post
                 </button>
@@ -203,7 +203,7 @@ export default function Posts() {
                   {/* Submit Button */}
                   <button
                     type="submit"
-                    className="w-full cursor-pointer transition duration-300 mt-2 px-4 py-2 bg-orange-500 text-white font-semibold rounded hover:text-[#FCC821] hover:bg-[#ffffff] border-[2px] border-[#FCC821]"
+                    className="w-full cursor-pointer transition duration-300 mt-2 px-4 py-2 bg-blue-500 text-white font-semibold rounded hover:text-[#FCC821] hover:bg-[#ffffff] border-[2px] border-[#FCC821]"
                   >
                     Post
                   </button>

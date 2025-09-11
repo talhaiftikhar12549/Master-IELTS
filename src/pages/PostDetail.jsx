@@ -170,9 +170,11 @@ const PostDetail = () => {
 if (!post) return <SinglePostSkeleton />;
 
   return (
-    <div className="pt-20 pl-8 sm:pl-0 md:pl-14">
+    <div className="w-full flex flex-col items-center pb-20">
+
+    <div className="w-2/3 pt-20 pl-8 sm:pl-0 md:pl-14">
           <div className="w-full flex justify-between relative">
-            <CiCircleChevLeft onClick={()=> navigate("/community")} className="absolute -left-10 text-[25px] text-gray-700 hover:text-gray-400 cursor-pointer" />
+            <CiCircleChevLeft onClick={()=> navigate("/dashboard/community")} className="absolute -left-10 text-[25px] text-gray-700 hover:text-gray-400 cursor-pointer" />
             <div className="flex flex-col ">
               <p className="font-bold flex items-center gap-2">
                 {post.community}{" "}
@@ -533,6 +535,7 @@ if (!post) return <SinglePostSkeleton />;
             </div>
           ))}
         </div>
+    </div>
   );
 };
 

@@ -1,5 +1,6 @@
 import { Outlet } from "react-router-dom";
 import { Topbar } from "../components/Dashboard/Topbar";
+import { Sidebar } from "../components/Dashboard/Sidebar";
 
 const CommunityLayout = () => {
   return (
@@ -7,9 +8,9 @@ const CommunityLayout = () => {
              <Topbar />
  
              <div className="w-full h-full bg-gray-50 flex justify-between pr-52">
-            <div className="w-1/3"> Sidebar </div>
+            <Sidebar />
  
-             <div className="w-full overflow-y-auto">
+             <div className="w-full px-10 overflow-y-auto">
              <Outlet />
              </div>
              </div>

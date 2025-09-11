@@ -89,7 +89,7 @@ const Checkout = () => {
   if (!clientSecret) return <p>Missing payment information.</p>;
 
   return (
-    <div className="flex justify-center items-center min-h-screen">
+    <div className="w-full flex justify-center items-center min-h-screen bg-gray-100">
       <div className="w-[500px] p-6 bg-white shadow-md rounded-xl">
         <h2 className="text-2xl font-bold mb-4">Checkout</h2>
         {options && (

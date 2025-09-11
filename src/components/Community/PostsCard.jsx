@@ -51,20 +51,20 @@ export const PostsCard = ({ post, fetchPosts }) => {
 
   return (
    
-    <div className="w-[100%] flex flex-col gap-4 border-b border-gray-300  cursor-pointer transition ">
-      <div className="hover:bg-[#fdfdfb] border-[#dcdcdc] transition-colors duration-300 ease-in-out rounded-[10px] p-4 mb-[10px]">
+    <div className="w-[100%] flex flex-col gap-4 shadow-lg hover:shadow-xl rounded-lg cursor-pointer transition ">
+      <div className="hover:bg-[#fdfdfb] transition-colors duration-300 ease-in-out rounded-[10px] p-4 mb-[10px]">
         <div
-          onClick={() => navigate(`/community/${post._id}`)}
+          onClick={() => navigate(`/dashboard/community/${post._id}`)}
           className="flex-1"
         >
           <div className="w-full flex mb-4">
-            <p className="py-1 px-2 bg-orange-500 text-white rounded text-xs">
+            <p className="py-1 px-2 bg-blue-500 text-white rounded text-xs">
               {post.community}
             </p>
           </div>
           <div className="flex items-start justify-between space-x-5">
             <div className="flex gap-2">
-              <div className="w-7 h-7 border border-gray-400 text-white font-bold bg-red-700 rounded-full flex items-center justify-center text-sm">
+              <div className="w-7 h-7 border border-gray-400 text-white font-bold bg-gray-700 rounded-full flex items-center justify-center text-sm">
                 {post.author?.name.slice(0, 1).toUpperCase()}
               </div>
 
@@ -102,19 +102,19 @@ export const PostsCard = ({ post, fetchPosts }) => {
           <div
             disabled={loadingVotes[`post-upvote`]}
             onClick={() => handleVote(post._id, "upvote")}
-            className="flex items-center space-x-3 text-black text-[14px] bg-gray-100 py-[4px] px-[10px] rounded-[5px]  hover:text-orange-500 transition-colors duration-300 ease-in-out "
+            className="flex items-center space-x-3 text-black text-[14px] bg-gray-100 py-[4px] px-[10px] rounded-[5px]  hover:text-blue-500 transition-colors duration-300 ease-in-out "
           >
             <TbArrowBigUpFilled /> <p>{post.upvotes?.length || 0}</p>
           </div>
           <div
             onClick={() => {user ? navigate(`/community/${post._id}`) : navigate(`/login`)}}
-            className="flex items-center space-x-2 text-black text-[14px] bg-gray-100 py-[4px] px-[10px] rounded-[5px] hover:text-orange-500 transition-colors duration-300 ease-in-out"
+            className="flex items-center space-x-2 text-black text-[14px] bg-gray-100 py-[4px] px-[10px] rounded-[5px] hover:text-blue-500 transition-colors duration-300 ease-in-out"
           >
             <FaMessage /> <p>{post.commentsCount || 0}</p>
           </div>
           <div
             onClick={() => handleCopy(post._id)}
-            className="flex items-center space-x-2 text-black text-[14px] bg-gray-100 py-[4px] px-[10px] rounded-[5px] hover:text-orange-500 transition-colors duration-300 ease-in-out"
+            className="flex items-center space-x-2 text-black text-[14px] bg-gray-100 py-[4px] px-[10px] rounded-[5px] hover:text-blue-500 transition-colors duration-300 ease-in-out"
           >
             <IoArrowRedoSharp />
             <p>Share</p>

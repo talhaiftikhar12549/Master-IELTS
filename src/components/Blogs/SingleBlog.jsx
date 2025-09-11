@@ -105,7 +105,7 @@ export default function SingleBlog() {
               blogCategory?.split(", ").map((cat, index) => (
                 <p
                   key={index}
-                  className="py-1 px-3 bg-[#FCC821] rounded-[3px] text-[12px]"
+                  className="py-1 px-3 bg-blue-500 text-white rounded-[3px] text-[12px]"
                 >
                   {cat.trim()}
                 </p>

@@ -1,11 +1,15 @@
 import { useEffect, useState } from "react";
-import { NavLink, useParams } from "react-router-dom";
+import { NavLink, useParams, useLocation, useNavigate } from "react-router-dom";
 import { FaAngleLeft } from "react-icons/fa";
 import LessonComments from "../../../components/Courses/Lessons/LessonComments";
 import api from "../../../services/api";
 
 export const Lesson = () => {
   const { courseSlug, lessonSlug } = useParams();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const queryParams = new URLSearchParams(location.search);
+
   const [activeTab, setActiveTab] = useState("lesson");
   const [singleLessonData, setSingleLessonData] = useState(null);
   const [lessonQuiz, setLessonQuiz] = useState(null);
@@ -13,6 +17,20 @@ export const Lesson = () => {
   const [responses, setResponses] = useState({});
   const [quizStarted, setQuizStarted] = useState(false);
   const [timeLeft, setTimeLeft] = useState(null); // seconds
+
+  useEffect(() => {
+    const tab = queryParams.get("tab");
+    if (tab === "qa") {
+      setActiveTab("qa");
+    } else {
+      setActiveTab("lesson");
+    }
+  }, [location.search]);
+
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    navigate(`?tab=${tab}`); // keeps URL in sync
+  };
 
   // ✅ Get Lesson Data
   const getLesson = async () => {
@@ -58,11 +76,11 @@ export const Lesson = () => {
     }
   };
 
-  useEffect(() => {
-    if (lessonQuiz?._id) {
-      startAttempt(lessonQuiz._id);
-    }
-  }, [lessonQuiz]);
+  // useEffect(() => {
+  //   if (lessonQuiz?._id) {
+  //     startAttempt(lessonQuiz._id);
+  //   }
+  // }, [lessonQuiz]);
 
   useEffect(() => {
     if (!quizStarted || timeLeft === null) return;
@@ -96,14 +114,14 @@ export const Lesson = () => {
     }
   };
 
-  const startAttempt = async (quizId) => {
-    try {
-      const res = await api.post(`/quizAttempts/${quizId}/start`);
-      setAttemptId(res.data._id);
-    } catch (error) {
-      console.error("Error starting attempt:", error);
-    }
-  };
+  // const startAttempt = async (quizId) => {
+  //   try {
+  //     const res = await api.post(`/quizAttempts/${quizId}/start`);
+  //     setAttemptId(res.data._id);
+  //   } catch (error) {
+  //     console.error("Error starting attempt:", error);
+  //   }
+  // };
 
   const handleSubmit = async () => {
     if (!attemptId) return;
@@ -148,7 +166,7 @@ export const Lesson = () => {
                 ? "border-b-2 border-blue-500 text-blue-600"
                 : "text-gray-500 hover:text-blue-600"
             }`}
-            onClick={() => setActiveTab("lesson")}
+            onClick={() => handleTabChange("lesson")}
           >
             Lesson
           </button>
@@ -158,7 +176,7 @@ export const Lesson = () => {
                 ? "border-b-2 border-blue-500 text-blue-600"
                 : "text-gray-500 hover:text-blue-600"
             }`}
-            onClick={() => setActiveTab("qa")}
+            onClick={() => handleTabChange("qa")}
           >
             Q & A
           </button>

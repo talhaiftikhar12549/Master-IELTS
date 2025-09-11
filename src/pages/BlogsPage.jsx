@@ -40,15 +40,15 @@ const BlogsPage = () => {
     <>
       <Helmet>
         {/* Meta Title */}
-        <title>Our Blog</title>
+        <title>Our Blogs</title>
       </Helmet>
 
-      <div className="max-w-[1280px] w-[100%] custom-width lg:px-[40px] xl:px-0 px-[16px] flex flex-col items-center justify-center">
+      <div className="max-w-[1280px] w-[100%] custom-width lg:px-[40px] xl:px-0 px-[16px] flex flex-col items-center justify-center mt-20">
         {/* HERO SECTION  */}
         <div className="w-full flex flex-col text-center py-10 space-y-2">
-          <h1 className="text-orange-500 font-bold">OUR BLOGS</h1>
-          <p className="font-bold text-[40px]">
-            We write you blogs worth reading
+          <h1 className="text-blue-500 font-bold text-xl">OUR BLOGS</h1>
+          <p className="font-bold text-[50px]">
+            Article & Resources
           </p>
         </div>
 
@@ -61,7 +61,7 @@ const BlogsPage = () => {
               ))}
             </div>
           ) : (
-            <div className=" grid gap-[40px] grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 w-full pb-[200px]">
+            <div className=" grid gap-[40px] grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 w-full pt-10 pb-[200px]">
               {apiDataB.map((blg) => (
                 <BlogCard blog={blg} handleDelete={handleDelete} />
               ))}

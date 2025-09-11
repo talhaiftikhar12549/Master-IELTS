@@ -2,7 +2,12 @@ import laptop from "../../../assets/Home/girl-using-laptop.png";
 import blob from "../../../assets/Home/blue-blob.svg";
 import Checklist from "./Checklist";
 
-const WhoFor = () => {
+const WhoFor = ({ chooseCourseRef }) => {
+  const handleScroll = () => {
+    chooseCourseRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+  
+
   return (
     <div className="w-full flex flex-col py-16 items-center justify-center bg-[#F3F8FF] px-6">
       {/* Heading */}
@@ -21,10 +26,16 @@ const WhoFor = () => {
           </p>
 
           <div className="w-full space-y-4 md:space-y-5">
-            <Checklist title={"Struggling to find time to study in your busy life?"} />
-            <Checklist title={"Want a flexible course that is tailored to your needs?"} />
+            <Checklist
+              title={"Struggling to find time to study in your busy life?"}
+            />
+            <Checklist
+              title={"Want a flexible course that is tailored to your needs?"}
+            />
             <Checklist title={"Finding it hard to motivate yourself?"} />
-            <Checklist title={"Desire a band 7+ but failing to meet your target?"} />
+            <Checklist
+              title={"Desire a band 7+ but failing to meet your target?"}
+            />
           </div>
 
           <p className="text-gray-900 font-medium text-base md:text-lg">
@@ -32,7 +43,10 @@ const WhoFor = () => {
             simple solution
           </p>
 
-          <button className="w-fit px-8 md:px-10 py-3 text-white rounded-full bg-[#0554F2] hover:bg-blue-500/80 font-bold cursor-pointer text-sm md:text-base">
+          <button
+            onClick={handleScroll}
+            className="w-fit px-8 md:px-10 py-3 text-white rounded-full bg-[#0554F2] hover:bg-blue-500/80 font-bold cursor-pointer text-sm md:text-base"
+          >
             Sign up Now!
           </button>
         </div>

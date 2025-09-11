@@ -48,8 +48,13 @@ const Navbar = () => {
             </NavLink>
           </li>
           <li>
-            <NavLink to="/all-courses" className={linkClasses}>
+            <NavLink to="/dashboard" className={linkClasses}>
               Courses
+            </NavLink>
+          </li>
+           <li>
+            <NavLink to="/dashboard" className={linkClasses}>
+              Dashboard
             </NavLink>
           </li>
           <li>
@@ -57,16 +62,12 @@ const Navbar = () => {
               Contact Us
             </NavLink>
           </li>
-          <li>
-            <NavLink to="/dashboard" className={linkClasses}>
-              Dashboard
-            </NavLink>
-          </li>
-          <li>
+         
+          {/* <li>
             <NavLink to="/cart" className={linkClasses}>
               Cart
             </NavLink>
-          </li>
+          </li> */}
           <li>
             <button
               onClick={handleAuth}
@@ -98,8 +99,13 @@ const Navbar = () => {
               </NavLink>
             </li>
             <li>
-              <NavLink to="/all-courses" className={linkClasses} onClick={toggleMenu}>
+              <NavLink to="/dashboard" className={linkClasses} onClick={toggleMenu}>
                 Courses
+              </NavLink>
+            </li>
+             <li>
+              <NavLink to="/dashboard" className={linkClasses} onClick={toggleMenu}>
+                Dashboard
               </NavLink>
             </li>
             <li>
@@ -107,16 +113,12 @@ const Navbar = () => {
                 Contact Us
               </NavLink>
             </li>
-            <li>
-              <NavLink to="/dashboard" className={linkClasses} onClick={toggleMenu}>
-                Dashboard
-              </NavLink>
-            </li>
-            <li>
+           
+            {/* <li>
               <NavLink to="/cart" className={linkClasses} onClick={toggleMenu}>
                 Cart
               </NavLink>
-            </li>
+            </li> */}
             <li>
               <button
                 onClick={() => {

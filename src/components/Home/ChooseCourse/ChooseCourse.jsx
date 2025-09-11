@@ -1,6 +1,7 @@
 import PaymentCard from "./PaymentCard";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
+
 const paymentCardData = [
   {
     id: 1,
@@ -35,9 +36,9 @@ const paymentCardData = [
   },
 ];
 
-const ChooseCourse = () => {
+const ChooseCourse = ({chooseCourseRef}) => {
   return (
-    <div className="w-full flex flex-col py-16 px-4 md:px-8 items-center justify-center bg-[#F3F8FF]">
+    <div ref={chooseCourseRef}  id="choose-course" className="w-full flex flex-col py-16 px-4 md:px-8 items-center justify-center bg-[#F3F8FF]">
       <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[48px] font-semibold text-center">
         <span className="text-[#0554F2]">Choose</span> Your Course
       </h2>

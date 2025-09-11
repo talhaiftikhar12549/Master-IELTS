@@ -25,6 +25,10 @@ import CreateBlogs from "./pages/Dashboard/CreateBlogs";
 import NotFound from "./pages/NotFound";
 import SingleBlog from "./components/Blogs/SingleBlog";
 import Checkout from "./pages/Checkout";
+import Contact from "./pages/Contact";
+import MyQuizAttempts from "./pages/Dashboard/MyQuizAttempts";
+import MyQAs from "./pages/Dashboard/MyQas";
+import MyProfile from "./pages/Dashboard/Profile";
 
 function App() {
   return (
@@ -33,6 +37,7 @@ function App() {
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Home />} />
           <Route path="blogs" element={<BlogsPage />} />
+          <Route path="contact" element={<Contact />} />
           <Route path="/:slug" element={<SingleBlog />} />
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
@@ -54,14 +59,19 @@ function App() {
           <Route path="create-course" element={<CreateCourse />} />
           <Route path="create-topics" element={<CreateTopics />} />
           <Route path="create-lessons" element={<CreateLessons />} />
-           <Route path="create-blogs" element={<CreateBlogs />} />
+          <Route path="profile" element={<MyProfile />} />
+          <Route path="create-blogs" element={<CreateBlogs />} />
           <Route path="quiz-attempts" element={<QuizAttempts />} />
+          <Route path="my-quiz-attempts" element={<MyQuizAttempts />} />
+          <Route path="my-qas" element={<MyQAs />} />
+          <Route path="community" element={<Posts />} />
+          <Route path="/dashboard/community/:id" element={<PostDetail />} />
         </Route>
 
-        <Route element={<CommunityLayout />}>
+        {/* <Route element={<CommunityLayout />}>
           <Route path="/community" element={<Posts />} />
           <Route path="/community/:id" element={<PostDetail />} />
-        </Route>
+        </Route> */}
 
         <Route path="/all-courses" element={<AllCourses />} />
         <Route path="/course" element={<CourseLayout />}>
