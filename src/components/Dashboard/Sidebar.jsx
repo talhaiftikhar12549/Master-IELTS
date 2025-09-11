@@ -13,6 +13,8 @@ import {
   FiSettings,
   FiLogOut,
 } from "react-icons/fi";
+import { GiProgression } from "react-icons/gi";
+import { FaRegQuestionCircle, FaRegUserCircle } from "react-icons/fa";
 
 export const Sidebar = () => {
   const location = useLocation();
@@ -45,12 +47,12 @@ export const Sidebar = () => {
         </NavLink>
 
         <NavLink to="profile" className={linkClasses}>
-          <FiSettings size={20} />
+          <FaRegUserCircle size={20} />
           My Profile
         </NavLink>
 
         <NavLink to="courses-progress" className={linkClasses}>
-          <FiSettings size={20} />
+          <GiProgression size={20} />
           Courses Progress
         </NavLink>
 
@@ -105,7 +107,7 @@ export const Sidebar = () => {
         </NavLink>
 
         <NavLink to="my-qas" className={linkClasses}>
-          <FiMessageSquare size={20} />Q & A
+          <FaRegQuestionCircle size={20} />Q & A
         </NavLink>
       </div>
 

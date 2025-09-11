@@ -29,6 +29,7 @@ import Contact from "./pages/Contact";
 import MyQuizAttempts from "./pages/Dashboard/MyQuizAttempts";
 import MyQAs from "./pages/Dashboard/MyQas";
 import MyProfile from "./pages/Dashboard/Profile";
+import CoursesProgress from "./pages/Dashboard/CoursesProgress";
 
 function App() {
   return (
@@ -65,6 +66,7 @@ function App() {
           <Route path="my-quiz-attempts" element={<MyQuizAttempts />} />
           <Route path="my-qas" element={<MyQAs />} />
           <Route path="community" element={<Posts />} />
+          <Route path="courses-progress" element={<CoursesProgress />} />
           <Route path="/dashboard/community/:id" element={<PostDetail />} />
         </Route>
 
