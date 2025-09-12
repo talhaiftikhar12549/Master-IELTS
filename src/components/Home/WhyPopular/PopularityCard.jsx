@@ -2,7 +2,7 @@ const PopularityCard = ({ id, imageURL, title, desc }) => {
   return (
     <div
       key={id}
-      className="w-full md:w-[90%] xl:w-2/3 flex flex-col justify-center items-center p-3"
+      className="w-full md:w-[90%] xl:w-10/12 2xl:w-2/3 flex flex-col justify-center items-center p-3"
     >
       <div
         className={`w-fit md:w-full bg-blue-100 rounded-lg justify-between items-center 

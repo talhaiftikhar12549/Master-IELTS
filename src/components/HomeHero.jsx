@@ -43,7 +43,7 @@ const HomeHero = ({ chooseCourseRef }) => {
       </div>
 
       {/* Counter Section */}
-      <div className="w-11/12 md:w-4/5 lg:w-2/3 bg-[#0554F2] my-16 flex flex-col md:flex-row justify-around items-center rounded-2xl py-4 px-4 text-white space-y-6 md:space-y-0">
+      <div className="w-11/12 md:w-4/5 xl:w-10/12 2xl:w-2/3 bg-[#0554F2] my-16 flex flex-col md:flex-row justify-around items-center rounded-2xl py-4 px-4 text-white space-y-6 md:space-y-0">
         <Counter title={"200+"} desc={"Students"} />
         <Counter title={"7.5"} desc={"Average Score"} />
         <Counter title={"250+"} desc={"Videos and Quizzes"} />

@@ -2,6 +2,7 @@ import { NavLink, Outlet, useParams } from "react-router-dom";
 import api from "../services/api";
 import { useEffect, useState } from "react";
 import { FaChevronDown } from "react-icons/fa6";
+import Navbar from "../components/NavBar";
 
 export const CourseLayout = () => {
   const { courseSlug, lessonSlug } = useParams();
@@ -42,6 +43,8 @@ export const CourseLayout = () => {
   };
 
   return (
+    <>
+    <Navbar />
     <div className="w-full min-h-screen bg-gray-50 flex justify-center mt-10 py-20">
       <div className="w-11/12 max-w-7xl flex gap-8">
         {/* Main Content */}
@@ -137,5 +140,6 @@ export const CourseLayout = () => {
         </aside>
       </div>
     </div>
+    </>
   );
 };

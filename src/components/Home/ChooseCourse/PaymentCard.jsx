@@ -12,23 +12,20 @@ const PaymentCard = ({
 }) => {
   const navigate = useNavigate();
 
-const handleSelectPlan = async (plan, price) => {
-  try {
-    // 1. Create an order in backend
-    const res = await api.post('/order', { plan, totalAmount: price });
-    const orderId = res.data._id;    
+  const handleAddToCart = async () => {
+    try {
+      // Add selected plan to cart
+      await api.post("/cart", {
+        planId: id,
+        quantity: 1,
+      });
 
-    // 2. Create payment intent for that order
-    const paymentRes = await api.post('/payments/create-intent', { orderId });
-    const clientSecret = paymentRes.data.clientSecret;
-
-    // 3. Redirect user to checkout page (where Stripe Elements is mounted)
-    navigate(`/checkout?clientSecret=${clientSecret}&orderId=${orderId}`);
-  } catch (err) {
-    console.error(err);
-  }
-};
-
+      // Redirect user to Cart page
+      navigate("/cart");
+    } catch (err) {
+      console.error("Error adding to cart", err);
+    }
+  };
   return (
     <div
       key={id}
@@ -91,7 +88,7 @@ const handleSelectPlan = async (plan, price) => {
       {/* CTA button */}
       <div className="w-full flex justify-center items-center py-5 absolute bottom-5">
         <button
-          onClick={() => handleSelectPlan(title, discPrice || actualPrice)}
+          onClick={() => handleAddToCart()}
           className={`w-fit px-10 py-3 rounded-full 
     ${
       title === "Premium"

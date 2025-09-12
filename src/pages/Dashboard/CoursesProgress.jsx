@@ -10,6 +10,8 @@ const CoursesProgress = () => {
     const fetchProgress = async () => {
       try {
         const res = await api.get("/progress");
+        console.log(res.data);
+        
         setCoursesProgress(res.data);
       } catch (err) {
         console.error("Failed to fetch courses progress", err);

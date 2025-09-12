@@ -22,6 +22,7 @@ export const AuthProvider = ({ children }) => {
         role: userData.role,
         ...userData.user, // agar backend user object bhej raha hai
       });
+      
       setIsAuthenticated(true);
       localStorage.setItem(
         "user",

@@ -30,6 +30,8 @@ import MyQuizAttempts from "./pages/Dashboard/MyQuizAttempts";
 import MyQAs from "./pages/Dashboard/MyQas";
 import MyProfile from "./pages/Dashboard/Profile";
 import CoursesProgress from "./pages/Dashboard/CoursesProgress";
+import Cart from "./pages/Cart";
+import Success from "./pages/Success";
 
 function App() {
   return (
@@ -42,7 +44,9 @@ function App() {
           <Route path="/:slug" element={<SingleBlog />} />
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
+          <Route path="cart" element={<Cart />} />
            <Route path="/checkout" element={<Checkout />} />
+           <Route path="success" element={<Success />} />
         </Route>
 
          <Route path="/not-found" element={<NotFound />} />

@@ -7,10 +7,11 @@ import AnyQuestions from "../components/Home/AnyQuestions/AnyQuestions";
 import FAQs from "../components/Home/FAQs/FAQs";
 import LessonOverview from "../components/Home/LessonCards/LessonOverview";
 import HomeHero from "../components/HomeHero";
-import { useRef } from "react";
+import { useOutletContext } from "react-router-dom";
 
 export default function Homepage() {
-  const chooseCourseRef = useRef(null);
+
+  const chooseCourseRef = useOutletContext()  
 
   return (
     <>

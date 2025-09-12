@@ -11,7 +11,6 @@ export const DashboardHome = () => {
 
   const fetchLogedinUser = async () => {
     const res = await api.get(`/users/${user.id}`);
-    console.log(res.data);
     setLoggedInUser(res.data);
   };
 

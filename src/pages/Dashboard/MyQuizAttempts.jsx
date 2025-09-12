@@ -57,7 +57,6 @@ const MyQuizAttempts = () => {
         <table className="min-w-full border border-gray-200">
           <thead>
             <tr className="bg-gray-100 text-left">
-              <th className="p-3 border">User</th>
               <th className="p-3 border">Quiz</th>
               <th className="p-3 border">Score</th>
               <th className="p-3 border">Started</th>
@@ -68,7 +67,6 @@ const MyQuizAttempts = () => {
           <tbody>
             {attempts.map((attempt) => (
               <tr key={attempt._id} className="hover:bg-gray-50">
-                <td className="p-3 border">{attempt.user?.name}</td>
                 <td className="p-3 border">{attempt.quiz?.title}</td>
                 <td className="p-3 border font-semibold">
                   {attempt.score} / {attempt.answers?.length}

@@ -52,7 +52,7 @@ const Roadmap = () => {
       </h2>
 
       {/* Responsive Grid */}
-      <div className="w-full md:w-5/6 lg:w-8/12 xl:8/12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-10">
+      <div className="w-full md:w-5/6 lg:w-8/12 xl:w-10/12 2xl:w-2/3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-10">
         {cardsData.map((card) => (
           <RoadmapCard
             key={card.id}

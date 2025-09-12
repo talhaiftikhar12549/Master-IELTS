@@ -16,7 +16,7 @@ const WhoFor = ({ chooseCourseRef }) => {
       </h2>
 
       {/* Content Wrapper */}
-      <div className="w-full lg:w-2/3 flex flex-col lg:flex-row justify-between items-center mt-12">
+      <div className="w-full xl:w-10/12 2xl:w-2/3 flex flex-col lg:flex-row justify-between items-center mt-12">
         {/* LHS */}
         <div className="w-full lg:w-1/2 h-full flex flex-col justify-center space-y-8 lg:space-y-10 px-4 lg:px-0 py-10">
           <p className="text-gray-900 font-medium text-base md:text-lg">
