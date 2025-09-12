@@ -301,13 +301,13 @@ if (!post) return <SinglePostSkeleton />;
               >
                 <FaMessage />
               </div>
-              <div
+              {/* <div
                 onClick={() => handleCopy(post._id)}
                 className="flex items-center space-x-2 text-black text-[14px] bg-gray-100 py-[4px] px-[10px] rounded-[5px] hover:text-orange-500 transition-colors duration-300 ease-in-out"
               >
                 <IoArrowRedoSharp />
                 <p>Share</p>
-              </div>
+              </div> */}
             </div>
     
             <div className="border-b border-gray-300 pb-6 mb-6"></div>
@@ -393,6 +393,9 @@ if (!post) return <SinglePostSkeleton />;
                     >
                       <FaMessage /> Reply
                     </button> }
+
+                    {console.log(comment)}
+                    
     
                     {user && (comment.author?._id === user.id || user.role === "admin" || user.role === "superadmin") && (
                       <>
@@ -509,7 +512,7 @@ if (!post) return <SinglePostSkeleton />;
                         <p>{reply.content}</p>
                       )}
                       <div className="flex items-center space-x-2 mt-2">
-                        {user && reply.author?._id === user.id && (
+                        {user && (reply.author?._id === user.id || user.role === "admin" || user.role === "superadmin") && (
                           <>
                             <button
                               onClick={() =>

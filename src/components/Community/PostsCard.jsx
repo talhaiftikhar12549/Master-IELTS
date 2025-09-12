@@ -107,18 +107,19 @@ export const PostsCard = ({ post, fetchPosts }) => {
             <TbArrowBigUpFilled /> <p>{post.upvotes?.length || 0}</p>
           </div>
           <div
-            onClick={() => {user ? navigate(`/community/${post._id}`) : navigate(`/login`)}}
+            onClick={() => {user ? navigate(`/dashboard/community/${post._id}`) : navigate(`/login`)}}
             className="flex items-center space-x-2 text-black text-[14px] bg-gray-100 py-[4px] px-[10px] rounded-[5px] hover:text-blue-500 transition-colors duration-300 ease-in-out"
           >
-            <FaMessage /> <p>{post.commentsCount || 0}</p>
+            <FaMessage /> 
+            {/* <p>{post.commentsCount || 0}</p> */}
           </div>
-          <div
+          {/* <div
             onClick={() => handleCopy(post._id)}
             className="flex items-center space-x-2 text-black text-[14px] bg-gray-100 py-[4px] px-[10px] rounded-[5px] hover:text-blue-500 transition-colors duration-300 ease-in-out"
           >
             <IoArrowRedoSharp />
             <p>Share</p>
-          </div>
+          </div> */}
         </div>
       </div>
     </div> 

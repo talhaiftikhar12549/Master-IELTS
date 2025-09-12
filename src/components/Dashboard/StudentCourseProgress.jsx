@@ -2,15 +2,15 @@ import { useEffect, useState } from "react";
 import api from "../../services/api";
 import { FaBook, FaCheckCircle } from "react-icons/fa";
 
-const CoursesProgress = () => {
+export default function StudentCourseProgress({ userID }) {
   const [coursesProgress, setCoursesProgress] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchProgress = async () => {
       try {
-        const res = await api.get("/progress");
-        
+        const res = await api.get(`/progress/user/${userID}`);
+
         setCoursesProgress(res.data);
       } catch (err) {
         console.error("Failed to fetch courses progress", err);
@@ -23,8 +23,7 @@ const CoursesProgress = () => {
 
   if (loading) {
     return (
-      <div className="max-w-4xl mx-auto p-6 bg-white mt-10 rounded-2xl shadow-md">
-        <h2 className="text-2xl font-bold mb-4">My Courses Progress</h2>
+      <div className="max-w-4xl mx-auto p-6 bg-white rounded-2xl shadow-md">
         <p>Loading progress...</p>
       </div>
     );
@@ -32,19 +31,14 @@ const CoursesProgress = () => {
 
   if (!coursesProgress || coursesProgress.length === 0) {
     return (
-      <div className="max-w-4xl mx-auto p-6 bg-white mt-10 rounded-2xl shadow-md">
-        <h2 className="text-2xl font-bold mb-4">My Courses Progress</h2>
+      <div className="max-w-4xl mx-auto p-6 bg-white rounded-2xl shadow-md">
         <p className="text-gray-600">No progress to show yet.</p>
       </div>
     );
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-8 bg-white mt-10 rounded-2xl shadow-lg">
-      <h2 className="text-3xl font-bold mb-8 text-gray-800">
-        📊 My Courses Progress
-      </h2>
-
+    <div className="max-w-4xl mx-auto p-8 bg-white rounded-2xl shadow-lg">
       <div className="space-y-6">
         {coursesProgress.map((course) => {
           const percent =
@@ -90,7 +84,7 @@ const CoursesProgress = () => {
                   </>
                 ) : (
                   <span className="text-gray-600">
-                    Course Completed: {Math.round(percent)}%
+                     Course Completed: {Math.round(percent)}%
                   </span>
                 )}
               </div>
@@ -100,6 +94,4 @@ const CoursesProgress = () => {
       </div>
     </div>
   );
-};
-
-export default CoursesProgress;
+}

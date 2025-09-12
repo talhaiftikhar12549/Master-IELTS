@@ -57,8 +57,9 @@ export const DashboardHome = () => {
         </div>
       ) : (
         <div className="w-full flex flex-wrap justify-center items-center gap-5 mt-5">
+         
           <NavLink
-            to={`/`}
+            to={`/?sec=card`}
             className="w-[49%] h-56 flex flex-col items-center justify-center p-5 shadow-lg bg-white hover:bg-blue-500/50 rounded-lg"
           >
             <p>You have not purchased any courses yet!</p>

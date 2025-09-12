@@ -32,6 +32,7 @@ import MyProfile from "./pages/Dashboard/Profile";
 import CoursesProgress from "./pages/Dashboard/CoursesProgress";
 import Cart from "./pages/Cart";
 import Success from "./pages/Success";
+import Students from "./pages/Dashboard/Students";
 
 function App() {
   return (
@@ -72,6 +73,7 @@ function App() {
           <Route path="community" element={<Posts />} />
           <Route path="courses-progress" element={<CoursesProgress />} />
           <Route path="/dashboard/community/:id" element={<PostDetail />} />
+          <Route path="students" element={<Students />} />
         </Route>
 
         {/* <Route element={<CommunityLayout />}>

@@ -13,6 +13,7 @@ import {
   FiSettings,
   FiLogOut,
 } from "react-icons/fi";
+import { PiStudent } from "react-icons/pi";
 import { GiProgression } from "react-icons/gi";
 import { FaRegQuestionCircle, FaRegUserCircle } from "react-icons/fa";
 
@@ -51,10 +52,12 @@ export const Sidebar = () => {
           My Profile
         </NavLink>
 
-        <NavLink to="courses-progress" className={linkClasses}>
-          <GiProgression size={20} />
-          Courses Progress
-        </NavLink>
+        {user && user?.role === "student" && (
+          <NavLink to="courses-progress" className={linkClasses}>
+            <GiProgression size={20} />
+            Courses Progress
+          </NavLink>
+        )}
 
         {user && user?.role !== "student" && (
           <NavLink to="quiz-builder" className={linkClasses}>
@@ -65,6 +68,11 @@ export const Sidebar = () => {
 
         {user && user?.role !== "student" && (
           <>
+            <NavLink to="students" className={linkClasses}>
+              <PiStudent size={20} />
+              Students
+            </NavLink>
+
             <NavLink to="create-course" className={linkClasses}>
               <FiBookOpen size={20} />
               Create Courses
@@ -97,10 +105,13 @@ export const Sidebar = () => {
           </>
         )}
 
-        <NavLink to="my-quiz-attempts" className={linkClasses}>
-          <FiCheckSquare size={20} />
-          My Quiz Attempts
-        </NavLink>
+        {user && user?.role === "student" && (
+          <NavLink to="my-quiz-attempts" className={linkClasses}>
+            <FiCheckSquare size={20} />
+            My Quiz Attempts
+          </NavLink>
+        )}
+
         <NavLink to="community" className={linkClasses}>
           <FiMessageSquare size={20} />
           Community

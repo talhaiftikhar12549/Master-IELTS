@@ -2,9 +2,27 @@ import { useState } from "react";
 import PaymentCard from "./PaymentCard";
 import api from "../../../services/api";
 import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
 const ChooseCourse = ({ chooseCourseRef }) => {
   const [paymentCardData, setPaymentCardData] = useState([]);
+
+  const location = useLocation()
+
+  const queryParams = new URLSearchParams(location.search);
+
+   const handleScroll = () => {
+    chooseCourseRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+
+  useEffect(() => {
+      const section = queryParams.get("sec");
+      if (section === "card") {
+        handleScroll()
+      } 
+    }, [location.search]);
+
 
   const FetchPlans = async () => {
     try {

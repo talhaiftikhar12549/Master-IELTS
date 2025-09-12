@@ -232,9 +232,9 @@ const LessonComments = ({ lessonID }) => {
                 >
                   <FaMessage /> Reply
                 </button>
-                {user.role === "admin" ||
+                {user && (user.role === "admin" ||
                 user.role === "superadmin" ||
-                user.token === token ? (
+                user.token === token) ? (
                   <>
                     <button
                       type="button"
@@ -365,7 +365,10 @@ const LessonComments = ({ lessonID }) => {
                     <p className="whitespace-pre-wrap">{r.comment}</p>
                   )}
 
-                  <div className="flex items-center space-x-2 mt-2">
+               {user && (user.role === "admin" ||
+                user.role === "superadmin" ||
+                user.token === token) &&  
+                <div className="flex items-center space-x-2 mt-2">
                     <button
                       type="button"
                       onClick={() =>
@@ -388,6 +391,7 @@ const LessonComments = ({ lessonID }) => {
                       Delete
                     </button>
                   </div>
+                   }
                 </div>
               ))}
             </div>

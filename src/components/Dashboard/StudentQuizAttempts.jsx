@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
-import { Dialog } from "@headlessui/react";
+import { useEffect, useState } from "react";
 import api from "../../services/api";
+import { Dialog } from "@headlessui/react";
 
-const QuizAttempts = () => {
+export default function StudentQuizAttempts({ userID }) {
   const [attempts, setAttempts] = useState([]);
   const [selectedAttempt, setSelectedAttempt] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -13,7 +13,6 @@ const QuizAttempts = () => {
     const fetchAttempts = async () => {
       try {
         const res = await api.get("/quizAttempts");
-
         setAttempts(res.data);
       } catch (error) {
         console.error("Error fetching attempts:", error);
@@ -51,14 +50,11 @@ const QuizAttempts = () => {
   };
 
   return (
-    <div className="max-w-6xl mx-auto p-6 bg-white mt-10 mb-20 rounded shadow-sm">
-      <h2 className="text-2xl font-bold mb-6">Quiz Attempts</h2>
-
+    <div className="max-w-6xl mx-auto p-6 bg-white rounded shadow-sm">
       <div className="overflow-x-auto">
         <table className="min-w-full border border-gray-200">
           <thead>
             <tr className="bg-gray-100 text-left">
-              <th className="p-3 border">User</th>
               <th className="p-3 border">Quiz</th>
               <th className="p-3 border">Score</th>
               <th className="p-3 border">Started</th>
@@ -68,39 +64,42 @@ const QuizAttempts = () => {
           </thead>
           <tbody>
             {attempts.map((attempt) => (
-              <tr key={attempt._id} className="hover:bg-gray-50">
-                <td className="p-3 border">{attempt.user?.name}</td>
-                <td className="p-3 border">{attempt.quiz?.title}</td>
-                <td className="p-3 border font-semibold">
-                  {attempt.score} / {attempt.answers?.length}
-                </td>
+              <>
+                {attempt.user._id === userID && (
+                  <tr key={attempt._id} className="hover:bg-gray-50">
+                    <td className="p-3 border">{attempt.quiz?.title}</td>
+                    <td className="p-3 border font-semibold">
+                      {attempt.score} / {attempt.answers?.length}
+                    </td>
 
-                <td className="p-3 border">
-                  {new Date(attempt.startedAt).toLocaleString()}
-                </td>
-                <td className="p-3 border">
-                  {attempt.submittedAt
-                    ? new Date(attempt.submittedAt).toLocaleString()
-                    : "-"}
-                </td>
-                <td className="p-3 border text-center space-x-2">
-                  <button
-                    onClick={() => {
-                      handleView(attempt);
-                      getQuizDetail(attempt.quiz?._id);
-                    }}
-                    className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
-                  >
-                    View
-                  </button>
-                  <button
-                    onClick={() => handleDelete(attempt._id)}
-                    className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
+                    <td className="p-3 border">
+                      {new Date(attempt.startedAt).toLocaleString()}
+                    </td>
+                    <td className="p-3 border">
+                      {attempt.submittedAt
+                        ? new Date(attempt.submittedAt).toLocaleString()
+                        : "-"}
+                    </td>
+                    <td className="p-3 border text-center space-x-2">
+                      <button
+                        onClick={() => {
+                          handleView(attempt);
+                          getQuizDetail(attempt.quiz?._id);
+                        }}
+                        className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
+                      >
+                        View
+                      </button>
+                      <button
+                        onClick={() => handleDelete(attempt._id)}
+                        className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                )}
+              </>
             ))}
             {attempts.length === 0 && (
               <tr>
@@ -209,6 +208,23 @@ const QuizAttempts = () => {
                             <span className="text-red-600">No</span>
                           )}
                         </p>
+
+                         <div className="flex">
+                            
+                          <strong>Answer:</strong>{" "}
+                          {ans.type === "matchingHeadings" ?
+                          <>
+                         {ans.response.map((res, index)=> {
+                            return (
+                                <p id={index}>
+                                   `[` {res} `]`
+                                </p>
+                            )
+                          })
+                        }
+                          </> : <p className="px-1">{ans.response}</p>
+                          }
+                        </div>
                         <hr className="mt-2" />
                       </div>
                     );
@@ -231,6 +247,4 @@ const QuizAttempts = () => {
       </Dialog>
     </div>
   );
-};
-
-export default QuizAttempts;
+}
