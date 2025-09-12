@@ -234,7 +234,7 @@ const LessonComments = ({ lessonID }) => {
                 </button>
                 {user && (user.role === "admin" ||
                 user.role === "superadmin" ||
-                user.token === token) ? (
+                user.id === c.user?._id ) ? (
                   <>
                     <button
                       type="button"
@@ -367,7 +367,7 @@ const LessonComments = ({ lessonID }) => {
 
                {user && (user.role === "admin" ||
                 user.role === "superadmin" ||
-                user.token === token) &&  
+                user.id === r.user?._id) &&  
                 <div className="flex items-center space-x-2 mt-2">
                     <button
                       type="button"
