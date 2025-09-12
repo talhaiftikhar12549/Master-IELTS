@@ -37,7 +37,6 @@ const QuizAttempts = () => {
   const getQuizDetail = async (id) => {
     try {
       const res = await api.get(`/quizzes/${id}`);
-      console.log(res.data);
       
       setSingleQuiz(res.data);
     } catch (error) {
@@ -145,7 +144,6 @@ const QuizAttempts = () => {
                 {selectedAttempt.answers.length !== 0 && singleQuiz &&
                   selectedAttempt.answers?.map((ans, idx) => {
 
-                    {console.log(singleQuiz)}
                     const q = singleQuiz?.questions.find(
                       (q) => q._id === ans.questionId
                     );

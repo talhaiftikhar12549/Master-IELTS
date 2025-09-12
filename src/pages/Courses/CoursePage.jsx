@@ -34,7 +34,6 @@ export const CoursePage = () => {
       try {
         const res = await api.get(`/users/${user.id}`);
         setLoggedUser(res.data)
-        console.log(res.data);
         
       } catch (err) {
         console.error("Failed to fetch progress", err);

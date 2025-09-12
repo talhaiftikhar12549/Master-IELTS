@@ -141,7 +141,6 @@ const MyQuizAttempts = () => {
                 {selectedAttempt.answers.length !== 0 && singleQuiz &&
                   selectedAttempt.answers?.map((ans, idx) => {
 
-                    {console.log(singleQuiz)}
                     const q = singleQuiz?.questions.find(
                       (q) => q._id === ans.questionId
                     );

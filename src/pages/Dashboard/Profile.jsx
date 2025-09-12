@@ -13,7 +13,6 @@ const MyProfile = () => {
     try {
       const res = await api.get(`/users/${user.id}`);
       setUserData(res.data);
-      console.log(res.data);
       
     } catch (err) {
       console.error("Failed to fetch user profile:", err);

@@ -57,8 +57,6 @@ const LessonComments = ({ lessonID }) => {
 
   // Update a top-level comment
   const handleUpdateComment = async (commentId) => {
-    console.log("editing comment text", editing.text);
-    
     try {
       const res = await api.put(`/discussion/comment/${commentId}`, {
         comment: editing.text,
