@@ -136,7 +136,7 @@ export const Lesson = () => {
         answers,
       });
       alert(
-        `⏱ Quiz submitted! You scored ${res.data.score} / ${res.data.total}`
+        `⏱ Quiz submitted! Please visit Quiz Attempts section on your Dashboard!`
       );
       setQuizStarted(false); // stop showing questions
     } catch (error) {
