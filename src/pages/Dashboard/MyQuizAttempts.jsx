@@ -12,7 +12,7 @@ const MyQuizAttempts = () => {
   useEffect(() => {
     const fetchAttempts = async () => {
       try {
-        const res = await api.get("/quizAttempts/my");        
+        const res = await api.get("/quizAttempts/my");
         setAttempts(res.data);
       } catch (error) {
         console.error("Error fetching attempts:", error);
@@ -36,7 +36,7 @@ const MyQuizAttempts = () => {
   const getQuizDetail = async (id) => {
     try {
       const res = await api.get(`/quizzes/${id}`);
-      
+
       setSingleQuiz(res.data);
     } catch (error) {
       console.error("Error deleting attempt:", error);
@@ -71,7 +71,7 @@ const MyQuizAttempts = () => {
                 <td className="p-3 border font-semibold">
                   {attempt.score} / {attempt.answers?.length}
                 </td>
-              
+
                 <td className="p-3 border">
                   {new Date(attempt.startedAt).toLocaleString()}
                 </td>
@@ -136,17 +136,14 @@ const MyQuizAttempts = () => {
                   {singleQuiz?.questions?.length}
                 </p>
                 <hr className="my-4" />
-                
-                
-                {selectedAttempt.answers.length !== 0 && singleQuiz &&
-                  selectedAttempt.answers?.map((ans, idx) => {
 
+                {selectedAttempt.answers.length !== 0 &&
+                  singleQuiz &&
+                  selectedAttempt.answers?.map((ans, idx) => {
                     const q = singleQuiz?.questions.find(
                       (q) => q._id === ans.questionId
                     );
 
-                    
-                    
                     return (
                       <div key={ans._id} className="mb-4">
                         {q.type === "matchingHeadings" ? (

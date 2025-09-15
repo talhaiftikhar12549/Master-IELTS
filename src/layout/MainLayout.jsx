@@ -3,7 +3,7 @@ import Navbar from "../components/NavBar";
 import { useRef } from "react";
 
 const MainLayout = () => {
-   const chooseCourseRef = useRef(null);
+  const chooseCourseRef = useRef(null);
 
   return (
     <>

@@ -393,9 +393,6 @@ if (!post) return <SinglePostSkeleton />;
                     >
                       <FaMessage /> Reply
                     </button> }
-
-                    {console.log(comment)}
-                    
     
                     {user && (comment.author?._id === user.id || user.role === "admin" || user.role === "superadmin") && (
                       <>

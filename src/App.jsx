@@ -17,7 +17,6 @@ import CreateTopics from "./pages/Dashboard/CreateTopics";
 import CreateLessons from "./pages/Dashboard/CreateLessons";
 import ProtectedRoute from "./services/ProtectedRoute";
 import Posts from "./pages/Posts";
-import CommunityLayout from "./layout/CommunityLayout";
 import PostDetail from "./pages/PostDetail";
 import QuizAttempts from "./pages/Dashboard/QuizAttempts";
 import BlogsPage from "./pages/BlogsPage";
@@ -33,11 +32,79 @@ import CoursesProgress from "./pages/Dashboard/CoursesProgress";
 import Cart from "./pages/Cart";
 import Success from "./pages/Success";
 import Students from "./pages/Dashboard/Students";
+import { useEffect, useState } from "react";
+import api from "./services/api";
+import NotesModal from "./components/Modals/NotesModal";
+import ThankYou from "./pages/ThankYou";
 
 function App() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [note, setNote] = useState({
+    title: "Sticky Note",
+    content: "",
+    color: "#fff8b5",
+  });
+  const [loading, setLoading] = useState(false);
+
+  // Fetch user note
+  useEffect(() => {
+    const fetchNote = async () => {
+      try {
+        setLoading(true);
+        const res = await api.get("/notes");
+        setNote(res.data.data);
+      } catch (err) {
+        console.error("Failed to fetch note", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchNote();
+  }, []);
+
+  // Update note API call
+  const handleSave = async () => {
+    try {
+      const res = await api.put("/notes", {
+        title: note.title,
+        content: note.content,
+        color: note.color,
+      });
+      setNote(res.data.data);
+    } catch (err) {
+      console.error("Failed to update note", err);
+    }
+  };
+
+  // Clear note (just empty content)
+  const handleClear = () => {
+    setNote((prev) => ({ ...prev, content: "" }));
+  };
+
   return (
     <AuthProvider>
+
+        <button
+          onClick={() => setIsOpen(true)}
+          className="fixed bottom-6 right-6 bg-yellow-400 hover:bg-yellow-500 text-black px-4 py-3 rounded-full shadow-lg font-semibold"
+        >
+          📝 Notes
+        </button>
+
+        <NotesModal
+          loading={loading}
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          note={note}
+          setNote={setNote}
+          handleClear={handleClear}
+          handleSave={handleSave}
+        />
+
+
       <Routes>
+      
+
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Home />} />
           <Route path="blogs" element={<BlogsPage />} />
@@ -46,11 +113,12 @@ function App() {
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
           <Route path="cart" element={<Cart />} />
-           <Route path="/checkout" element={<Checkout />} />
-           <Route path="success" element={<Success />} />
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="success" element={<Success />} />
+          <Route path="thank-you" element={<ThankYou />} />
         </Route>
 
-         <Route path="/not-found" element={<NotFound />} />
+        <Route path="/not-found" element={<NotFound />} />
 
         <Route
           path="/dashboard"
