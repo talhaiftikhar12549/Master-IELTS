@@ -83,28 +83,24 @@ function App() {
 
   return (
     <AuthProvider>
+      <button
+        onClick={() => setIsOpen(true)}
+        className="fixed bottom-6 right-6 bg-blue-400 hover:bg-blue-500 text-white px-4 py-3 rounded-full shadow-lg font-semibold"
+      >
+        📝 Notes
+      </button>
 
-        <button
-          onClick={() => setIsOpen(true)}
-          className="fixed bottom-6 right-6 bg-yellow-400 hover:bg-yellow-500 text-black px-4 py-3 rounded-full shadow-lg font-semibold"
-        >
-          📝 Notes
-        </button>
-
-        <NotesModal
-          loading={loading}
-          isOpen={isOpen}
-          setIsOpen={setIsOpen}
-          note={note}
-          setNote={setNote}
-          handleClear={handleClear}
-          handleSave={handleSave}
-        />
-
+      <NotesModal
+        loading={loading}
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        note={note}
+        setNote={setNote}
+        handleClear={handleClear}
+        handleSave={handleSave}
+      />
 
       <Routes>
-      
-
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Home />} />
           <Route path="blogs" element={<BlogsPage />} />

@@ -41,10 +41,10 @@ export default function ThankYou() {
               Back to Home
             </button>
             <button
-              onClick={() => navigate("/dashboard")}
+              onClick={() => navigate("/?sec=card")}
               className="px-6 py-3 cursor-pointer bg-gray-200 text-gray-700 rounded-md shadow hover:bg-gray-300 transition"
             >
-              View Courses
+              View Bundles
             </button>
           </div>
         </div>
