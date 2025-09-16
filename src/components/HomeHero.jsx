@@ -29,7 +29,6 @@ const HomeHero = ({ chooseCourseRef }) => {
             Let’s Ace it Together!
           </button>
         </div>
-
         {/* RHS with Gradient */}
         <div className="relative w-full lg:w-1/2 flex justify-end">
           <img
