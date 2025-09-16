@@ -46,26 +46,27 @@ function App() {
   });
   const [loading, setLoading] = useState(false);
 
-  const user = localStorage.getItem("user")
+  const user = localStorage.getItem("user");
+  const token = localStorage.getItem("token");
 
-  // Fetch user note
-  {user && user.token &&
-    useEffect(() => {
-      const fetchNote = async () => {
-        try {
-          setLoading(true);
-          const res = await api.get("/notes");
-          setNote(res.data.data);
-        } catch (err) {
-          console.error("Failed to fetch note", err);
-        } finally {
-          setLoading(false);
-        }
-      };
-      fetchNote();
-    }, []);
+  {
+    user &&
+      token &&
+      useEffect(() => {
+        const fetchNote = async () => {
+          try {
+            setLoading(true);
+            const res = await api.get("/notes");
+            setNote(res.data.data);
+          } catch (err) {
+            console.error("Failed to fetch note", err);
+          } finally {
+            setLoading(false);
+          }
+        };
+        fetchNote();
+      }, []);
   }
-
 
   // Update note API call
   const handleSave = async () => {
@@ -88,22 +89,26 @@ function App() {
 
   return (
     <AuthProvider>
-      <button
-        onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 bg-blue-400 hover:bg-blue-500 text-white px-4 py-3 rounded-full shadow-lg font-semibold"
-      >
-        📝 Notes
-      </button>
+      {user && token && (
+        <>
+          <button
+            onClick={() => setIsOpen(true)}
+            className="fixed bottom-6 z-50 right-6 bg-blue-400 hover:bg-blue-500 text-white px-4 py-3 rounded-full shadow-lg font-semibold"
+          >
+            📝 Notes
+          </button>
 
-      <NotesModal
-        loading={loading}
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-        note={note}
-        setNote={setNote}
-        handleClear={handleClear}
-        handleSave={handleSave}
-      />
+          <NotesModal
+            loading={loading}
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            note={note}
+            setNote={setNote}
+            handleClear={handleClear}
+            handleSave={handleSave}
+          />
+        </>
+      )}
 
       <Routes>
         <Route path="/" element={<MainLayout />}>
