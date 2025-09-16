@@ -1,5 +1,5 @@
 import students from "../assets/Home/students.jpg";
-import Counter from "./Home/Hero/counter";
+import Counter from "./Home/Hero/Counter";
 
 const HomeHero = ({ chooseCourseRef }) => {
   const handleScroll = () => {
