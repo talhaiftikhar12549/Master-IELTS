@@ -46,21 +46,26 @@ function App() {
   });
   const [loading, setLoading] = useState(false);
 
+  const user = localStorage.getItem("user")
+
   // Fetch user note
-  useEffect(() => {
-    const fetchNote = async () => {
-      try {
-        setLoading(true);
-        const res = await api.get("/notes");
-        setNote(res.data.data);
-      } catch (err) {
-        console.error("Failed to fetch note", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchNote();
-  }, []);
+  {user && user.token &&
+    useEffect(() => {
+      const fetchNote = async () => {
+        try {
+          setLoading(true);
+          const res = await api.get("/notes");
+          setNote(res.data.data);
+        } catch (err) {
+          console.error("Failed to fetch note", err);
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchNote();
+    }, []);
+  }
+
 
   // Update note API call
   const handleSave = async () => {
