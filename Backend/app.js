@@ -28,7 +28,7 @@ import notesRoutes from "./routes/notesRoutes.js"
 const app = express();
 connectDB();
 
-app.use(cors({ origin: true, credentials: true }));
+app.use(cors({ origin: "https://masterielts.online", methods: ["GET", "POST", "PUT", "DELETE"], credentials: true }));
 app.use(express.json());
 app.use(morgan('dev'));
 app.use(cookieParser());
