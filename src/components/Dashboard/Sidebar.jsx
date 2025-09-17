@@ -16,6 +16,7 @@ import {
 import { PiStudent } from "react-icons/pi";
 import { GiProgression } from "react-icons/gi";
 import { FaRegQuestionCircle, FaRegUserCircle } from "react-icons/fa";
+import { MdPayment } from "react-icons/md";
 
 export const Sidebar = () => {
   const location = useLocation();
@@ -60,10 +61,17 @@ export const Sidebar = () => {
         )}
 
         {user && user?.role !== "student" && (
+          <>
+          <NavLink to="create-plans" className={linkClasses}>
+            <MdPayment size={20} />
+            Payment Plans
+          </NavLink>
+          
           <NavLink to="quiz-builder" className={linkClasses}>
             <FiFileText size={20} />
             Quiz Builder
           </NavLink>
+          </>
         )}
 
         {user && user?.role !== "student" && (
