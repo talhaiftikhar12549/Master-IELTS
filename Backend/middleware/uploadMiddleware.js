@@ -1,27 +1,33 @@
 import multer from "multer";
-import { CloudinaryStorage } from "@fluidjs/multer-cloudinary";
-import { v2 as cloudinary } from "cloudinary";
-import dotenv from "dotenv";
+import path from "path";
+import fs from "fs";
 
-dotenv.config();
+// Create storage engine
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    let folder = "uploads/others"; // default
 
-// Configure Cloudinary
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
+    // Sort by mimetype into specific folders
+    if (file.mimetype.startsWith("video")) folder = "uploads/videos";
+    else if (file.mimetype.startsWith("image")) folder = "uploads/images";
+    else if (file.mimetype === "application/pdf") folder = "uploads/pdfs";
+    else if (
+      file.mimetype === "application/msword" ||
+      file.mimetype.includes("officedocument.wordprocessingml")
+    ) folder = "uploads/docs";
+    else if (file.mimetype.includes("presentation"))
+      folder = "uploads/ppts";
 
-// Set up Cloudinary storage
-const storage = new CloudinaryStorage({
-  cloudinary,
-  params: async (req, file) => {
-    const ext = file.originalname.split(".").pop();
-    return {
-      folder: "uploads",
-      allowed_formats: ["jpg", "jpeg", "png", "gif", "webp"],
-      public_id: `${Date.now()}-${Math.round(Math.random() * 1e9)}.${ext}`, // ✅ fixed
-    };
+    // Ensure folder exists
+    fs.mkdirSync(folder, { recursive: true });
+
+    cb(null, folder);
+  },
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname);
+    const filename =
+      Date.now() + "-" + Math.round(Math.random() * 1e9) + ext;
+    cb(null, filename);
   },
 });
 
@@ -32,19 +38,24 @@ const fileFilter = (req, file, cb) => {
     "image/png",
     "image/gif",
     "image/webp",
+    "video/mp4",
+    "video/mkv",
+    "application/pdf",
+    "application/msword",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "application/vnd.ms-powerpoint",
+    "application/vnd.openxmlformats-officedocument.presentationml.presentation",
   ];
+
   if (allowedMimeTypes.includes(file.mimetype)) {
     cb(null, true);
   } else {
-    cb(
-      new Error("Invalid file type. Only JPEG, PNG, GIF, and WEBP are allowed."),
-      false
-    );
+    cb(new Error("Invalid file type."), false);
   }
 };
 
-// File size limit (5MB)
-const limits = { fileSize: 5 * 1024 * 1024 };
+// File size limit (100MB for videos, 5MB for images/docs)
+const limits = { fileSize: 100 * 1024 * 1024 };
 
 const upload = multer({ storage, fileFilter, limits });
 

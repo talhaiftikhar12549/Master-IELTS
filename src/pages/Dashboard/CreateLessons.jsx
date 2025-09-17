@@ -3,16 +3,15 @@ import api from "../../services/api";
 import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
 import { AiOutlineDelete } from "react-icons/ai";
-import { FaRegEdit, FaRegEye } from "react-icons/fa";
+import { FaRegEdit } from "react-icons/fa";
 
 const CreateLessons = () => {
   const [formData, setFormData] = useState({
     title: "",
-    // description: "",
     type: "video",
     videoUrl: "",
-    resources: "",
     content: "",
+    resources: [],
   });
 
   const [lessons, setLessons] = useState([]);
@@ -25,6 +24,8 @@ const CreateLessons = () => {
   const [topicID, setTopicID] = useState("");
 
   const formRef = useRef();
+  const BASE_URL = import.meta.env.VITE_API_URL;
+
   const fetchCourses = async () => {
     try {
       const res = await api.get("/courses");
@@ -33,7 +34,7 @@ const CreateLessons = () => {
       setCourses(res.data);
       setTopics(res2.data);
     } catch (err) {
-      console.error("Error fetching lessons");
+      console.error("Error fetching courses/topics");
     }
   };
 
@@ -59,14 +60,17 @@ const CreateLessons = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleFileChange = (e) => {
+    setFormData((prev) => ({ ...prev, resources: Array.from(e.target.files) }));
+  };
+
   const resetForm = () => {
     setFormData({
       title: "",
-      // description: "",
       type: "video",
       videoUrl: "",
-      resources: "",
       content: "",
+      resources: [],
     });
     setCourseID("");
     setTopicID("");
@@ -78,56 +82,63 @@ const CreateLessons = () => {
     setLoading(true);
     setMessage("");
 
-    const payload = {
-      ...formData,
-      topic: topicID,
-    };
+    const data = new FormData();
+    data.append("title", formData.title);
+    data.append("type", formData.type);
+    data.append("videoUrl", formData.videoUrl);
+    data.append("content", formData.content);
+    data.append("topic", topicID);
+    formData.resources.forEach((file) => {
+      data.append("resources", file);
+    });
 
     try {
       if (editId) {
-        await api.put(`/lessons/${editId}`, payload);
+        await api.put(`/lessons/${editId}`, data, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
         setMessage("Lesson updated successfully!");
       } else {
-        await api.post(`/lessons/${topicID}`, payload);
+        await api.post(`/lessons/${topicID}`, data, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
         setMessage("Lesson created successfully!");
       }
 
       resetForm();
       fetchLessons();
     } catch (error) {
-      setMessage("Error saving topic.");
+      setMessage("Error saving lesson.");
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this topic?")) return;
-
+    if (!window.confirm("Are you sure you want to delete this lesson?")) return;
     try {
       await api.delete(`/lessons/${id}`);
       fetchLessons();
     } catch (err) {
-      alert("Failed to delete topic");
+      alert("Failed to delete lesson");
     }
   };
 
   const handleEdit = async (lesson) => {
     const selectedTopic = topics.find((t) => t._id === lesson.topic._id);
     const affiliatedCourseID = selectedTopic?.course?._id || "";
+
     setTopicID(selectedTopic?._id || "");
     setCourseID(affiliatedCourseID);
+
     setFormData({
-      topic: lesson.topic._id,
       title: lesson.title,
-      description: lesson.description || "",
       type: lesson.type || "video",
       videoUrl: lesson.videoUrl || "",
-      resources: lesson.resources?.join(", ") || "",
       content: lesson.content || "",
+      resources: [], // fresh upload for edit
     });
-    // setTopicID(selectedTopic?._id || "");
-    // setCourseID(affiliatedCourseID);
+
     setEditId(lesson._id);
 
     window.scrollTo({
@@ -155,15 +166,15 @@ const CreateLessons = () => {
           </div>
         )}
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} encType="multipart/form-data">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Course & Topic Select */}
             <div>
               <label className="block font-medium mb-1">Select Course</label>
               <select
-                name="course"
                 value={courseID}
                 onChange={(e) => setCourseID(e.target.value)}
-                className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300"
+                className="w-full border px-3 py-2 rounded"
                 required
               >
                 <option value="">-- Select Course --</option>
@@ -177,10 +188,9 @@ const CreateLessons = () => {
             <div>
               <label className="block font-medium mb-1">Select Topic</label>
               <select
-                name="topic"
                 value={topicID}
                 onChange={(e) => setTopicID(e.target.value)}
-                className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300"
+                className="w-full border px-3 py-2 rounded"
                 required
               >
                 <option value="">-- Select Topic --</option>
@@ -193,6 +203,7 @@ const CreateLessons = () => {
                   ))}
               </select>
             </div>
+
             {/* Title */}
             <div>
               <label className="block font-medium mb-1">Title</label>
@@ -201,10 +212,11 @@ const CreateLessons = () => {
                 name="title"
                 value={formData.title}
                 onChange={handleChange}
-                className="w-full border border-gray-300 rounded px-3 py-2"
+                className="w-full border px-3 py-2 rounded"
                 required
               />
             </div>
+
             {/* Type */}
             <div>
               <label className="block font-medium mb-1">Lesson Type</label>
@@ -212,7 +224,7 @@ const CreateLessons = () => {
                 name="type"
                 value={formData.type}
                 onChange={handleChange}
-                className="w-full border border-gray-300 rounded px-3 py-2"
+                className="w-full border px-3 py-2 rounded"
               >
                 <option value="video">Video</option>
                 <option value="quiz">Quiz</option>
@@ -227,35 +239,28 @@ const CreateLessons = () => {
                 name="videoUrl"
                 value={formData.videoUrl}
                 onChange={handleChange}
-                className="w-full border border-gray-300 rounded px-3 py-2"
+                className="w-full border px-3 py-2 rounded"
                 placeholder="https://youtube.com/..."
               />
             </div>
+
             {/* Resources */}
             <div className="md:col-span-2">
               <label className="block font-medium mb-1">
-                Resources (comma separated)
+                Upload Resources (PDF, DOC, etc.)
               </label>
               <input
-                type="text"
+                type="file"
                 name="resources"
-                value={formData.resources}
-                onChange={handleChange}
-                className="w-full border border-gray-300 rounded px-3 py-2"
-                placeholder="link1.pdf, link2.pdf, https://example.com"
+                multiple
+                onChange={handleFileChange}
+                className="w-full border px-3 py-2 rounded"
               />
             </div>
 
             {/* Content */}
             <div className="md:col-span-2">
               <label className="block font-medium mb-1">Content</label>
-              {/* <textarea
-                name="content"
-                value={formData.content}
-                onChange={handleChange}
-                rows={4}
-                className="w-full border border-gray-300 rounded px-3 py-2"
-              ></textarea> */}
               <ReactQuill
                 theme="snow"
                 value={formData.content}
@@ -265,6 +270,8 @@ const CreateLessons = () => {
                 className="bg-white rounded"
               />
             </div>
+
+            {/* Buttons */}
             <div>
               <button
                 type="submit"
@@ -310,7 +317,8 @@ const CreateLessons = () => {
               <thead className="bg-gray-100 text-gray-700">
                 <tr>
                   <th className="border px-4 py-2">Title</th>
-                  <th className="border px-4 py-2">Linked to</th>
+                  <th className="border px-4 py-2">Topic</th>
+                  <th className="border px-4 py-2">Resources</th>
                   <th className="border px-4 py-2">Actions</th>
                 </tr>
               </thead>
@@ -319,12 +327,28 @@ const CreateLessons = () => {
                   <tr key={lesson._id}>
                     <td className="border px-4 py-2">{lesson.title}</td>
                     <td className="border px-4 py-2">{lesson.topic.title}</td>
-                    <td className="border px-4 py-2 space-x-2">
+                    <td className="border px-4 py-2">
+                      {lesson.files?.length > 0 ? (
+                        <ul>
+                          {lesson.files.map((file, idx) => (
+                            <li key={idx}>
+                              <a
+                                href={`${BASE_URL}${file.path}`}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="text-blue-600 underline"
+                              >
+                                {file.originalName} ({file.size} KB)
+                              </a>
+                            </li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <span className="text-gray-400">No files</span>
+                      )}
+                    </td>
+                    <td className="border px-4 py-2">
                       <div className="flex items-center space-x-2">
-                        {/* <FaRegEye
-                          className="cursor-pointer text-blue-600 hover:text-blue-800"
-                          onClick={() => alert(`Viewing: ${lesson._id}`)}
-                        /> */}
                         <FaRegEdit
                           className="cursor-pointer text-yellow-600 hover:text-yellow-800"
                           onClick={() => handleEdit(lesson)}

@@ -4,6 +4,8 @@ import { FaAngleLeft } from "react-icons/fa";
 import LessonComments from "../../../components/Courses/Lessons/LessonComments";
 import api from "../../../services/api";
 
+const BASE_URL = import.meta.env.VITE_API_URL;
+
 export const Lesson = () => {
   const { courseSlug, lessonSlug } = useParams();
   const location = useLocation();
@@ -190,16 +192,66 @@ export const Lesson = () => {
           <p className="text-gray-600 mb-2">Type: {singleLessonData.type}</p>
           <p className="text-gray-600 mb-4">Course: {courseSlug}</p>
 
-          {singleLessonData.videoUrl && (
-            <div className="aspect-video w-full">
-              <iframe
-                className="w-full h-full rounded"
-                src={singleLessonData.videoUrl}
-                title="YouTube video player"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                referrerPolicy="strict-origin-when-cross-origin"
-                allowFullScreen
-              ></iframe>
+          {singleLessonData.files && singleLessonData.files.length > 0 && (
+            <div className="mt-6">
+              <h2 className="text-xl font-bold mb-2">Lesson Files:</h2>
+              <div className="space-y-4">
+                {singleLessonData.files.map((file, index) => {
+                  const fileType = file.mimetype.split("/")[0];
+                  const fileUrl = `${BASE_URL}/${file.path}`; 
+
+                  if (fileType === "video") {
+                    return (
+                      <video
+                        key={index}
+                        controls
+                        className="w-full max-h-[400px] rounded shadow"
+                      >
+                        <source src={fileUrl} type={file.mimetype} />
+                        Your browser does not support the video tag.
+                      </video>
+                    );
+                  }
+
+                  if (fileType === "image") {
+                    return (
+                      <img
+                        key={index}
+                        src={fileUrl}
+                        alt={file.originalname}
+                        className="w-full max-w-[600px] rounded shadow"
+                      />
+                    );
+                  }
+
+                  if (file.mimetype === "application/pdf") {
+                    return (
+                      <a
+                        key={index}
+                        href={fileUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block text-blue-600 underline"
+                      >
+                        📄 {file.originalname}
+                      </a>
+                    );
+                  }
+
+                  // Default for other file types
+                  return (
+                    <a
+                      key={index}
+                      href={fileUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block text-gray-700 underline"
+                    >
+                      📁 {file.originalname}
+                    </a>
+                  );
+                })}
+              </div>
             </div>
           )}
 

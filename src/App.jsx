@@ -64,26 +64,25 @@ function App() {
       }
     };
     fetchUser();
-  }, []);
+  }, []);  
 
+  useEffect(() => {
+  if (!userData?.hasPaid) return;
 
-   if (userData?.hasPaid) {
-        useEffect(() => {
-          const fetchNote = async () => {
-            try {
-              setLoading(true);
-              const res = await api.get("/notes");
-              setNote(res.data.data);
-            } catch (err) {
-              console.error("Failed to fetch note", err);
-            } finally {
-              setLoading(false);
-            }
-          };
-          fetchNote();
-        }, []);
+  const fetchNote = async () => {
+    try {
+      setLoading(true);
+      const res = await api.get("/notes");
+      setNote(res.data.data);
+    } catch (err) {
+      console.error("Failed to fetch note", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-   }  
+  fetchNote();
+}, [userData?.hasPaid]);
 
   // Update note API call
   const handleSave = async () => {

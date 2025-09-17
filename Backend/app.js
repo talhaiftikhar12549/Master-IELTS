@@ -24,6 +24,7 @@ import contactRoutes from "./routes/contactRoutes.js"
 import progressRoutes from "./routes/progressRoutes.js"
 import planRoutes from "./routes/planRoutes.js";
 import notesRoutes from "./routes/notesRoutes.js"
+import path from 'path';
 
 const app = express();
 connectDB();
@@ -52,6 +53,7 @@ app.use('/api/contact', contactRoutes);
 app.use('/api/progress', progressRoutes);
 app.use("/api/plans", planRoutes);
 app.use("/api/notes", notesRoutes);
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 app.use(errorHandler);
 
 export default app;
