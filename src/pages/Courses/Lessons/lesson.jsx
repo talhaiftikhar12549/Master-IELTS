@@ -50,6 +50,9 @@ export const Lesson = () => {
         );
       });
 
+      console.log(filteredLessonData);
+      
+
       setSingleLessonData(filteredLessonData);
 
       // If lesson exists, fetch quiz
@@ -196,8 +199,10 @@ export const Lesson = () => {
             <div className="mt-6">
               <h2 className="text-xl font-bold mb-2">Lesson Files:</h2>
               <div className="space-y-4">
+                
+                
                 {singleLessonData.files.map((file, index) => {
-                  const fileType = file.mimetype.split("/")[0];
+                  const fileType = file.type.split("/")[0];
                   const fileUrl = `${BASE_URL}/${file.path}`; 
 
                   if (fileType === "video") {
