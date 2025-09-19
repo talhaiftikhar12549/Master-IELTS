@@ -202,60 +202,61 @@ export const Lesson = () => {
                 
                 
                 {singleLessonData.files.map((file, index) => {
-                  const fileType = file.type.split("/")[0];
-                  const fileUrl = `${BASE_URL}/${file.path}`; 
+  const fileType = file.type?.split("/")[0];
+  const fileUrl = `${BASE_URL}${file.path}`; // ✅ remove extra slash
+  console.log(fileUrl);
 
-                  if (fileType === "video") {
-                    return (
-                      <video
-                        key={index}
-                        controls
-                        className="w-full max-h-[400px] rounded shadow"
-                      >
-                        <source src={fileUrl} type={file.mimetype} />
-                        Your browser does not support the video tag.
-                      </video>
-                    );
-                  }
+  if (fileType === "video") {
+    return (
+      <video
+        key={index}
+        controls
+        className="w-full max-h-[400px] rounded shadow"
+      >
+        <source src={fileUrl} type={file.type} /> {/* ✅ use file.type */}
+        Your browser does not support the video tag.
+      </video>
+    );
+  }
 
-                  if (fileType === "image") {
-                    return (
-                      <img
-                        key={index}
-                        src={fileUrl}
-                        alt={file.originalname}
-                        className="w-full max-w-[600px] rounded shadow"
-                      />
-                    );
-                  }
+  if (fileType === "image") {
+    return (
+      <img
+        key={index}
+        src={fileUrl}
+        alt={file.originalName} // ✅ use correct field
+        className="w-full max-w-[600px] rounded shadow"
+      />
+    );
+  }
 
-                  if (file.mimetype === "application/pdf") {
-                    return (
-                      <a
-                        key={index}
-                        href={fileUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="block text-blue-600 underline"
-                      >
-                        📄 {file.originalname}
-                      </a>
-                    );
-                  }
+  if (file.type === "application/pdf") {
+    return (
+      <a
+        key={index}
+        href={fileUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="block text-blue-600 underline"
+      >
+        📄 {file.originalName}
+      </a>
+    );
+  }
 
-                  // Default for other file types
-                  return (
-                    <a
-                      key={index}
-                      href={fileUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="block text-gray-700 underline"
-                    >
-                      📁 {file.originalname}
-                    </a>
-                  );
-                })}
+  return (
+    <a
+      key={index}
+      href={fileUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="block text-gray-700 underline"
+    >
+      📁 {file.originalName}
+    </a>
+  );
+})}
+
               </div>
             </div>
           )}
