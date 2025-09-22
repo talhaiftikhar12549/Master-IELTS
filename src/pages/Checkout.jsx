@@ -27,6 +27,7 @@ const CheckoutForm = ({ orderId, plan }) => {
     address: "",
     password: "",
     confirmPassword: "",
+    role: "student"
   });
   const [errors, setErrors] = useState({});
 
@@ -67,7 +68,9 @@ const CheckoutForm = ({ orderId, plan }) => {
           phone: formData.phone,
           address: formData.address,
           password: formData.password,
-          planId: plan._id,
+          confirmPassword: formData.confirmPassword,
+          role: formData.role,
+          plan: plan,
           hasPaid: true,
         });
 

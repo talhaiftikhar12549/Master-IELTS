@@ -2,18 +2,25 @@ import { useState, useEffect } from "react";
 import api from "../../services/api";
 import { useAuth } from "../../context/AuthContext";
 import { FaEnvelope, FaUser } from "react-icons/fa6";
-import { FaCheckCircle, FaShieldAlt, FaTimesCircle } from "react-icons/fa";
+import {
+  FaCheckCircle,
+  FaHome,
+  FaPhoneAlt,
+  FaShieldAlt,
+  FaTimesCircle,
+} from "react-icons/fa";
+import { MdOutlinePayment } from "react-icons/md";
 
 const MyProfile = () => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const {user} = useAuth()
+  const { user, plan } = useAuth();
 
   const getUser = async () => {
     try {
       const res = await api.get(`/users/${user.id}`);
+
       setUserData(res.data);
-      
     } catch (err) {
       console.error("Failed to fetch user profile:", err);
     } finally {
@@ -25,7 +32,7 @@ const MyProfile = () => {
     getUser();
   }, [user.id]);
 
-    const getInitials = (name) => {
+  const getInitials = (name) => {
     if (!name) return "?";
     return name
       .split(" ")
@@ -80,6 +87,21 @@ const MyProfile = () => {
         </div>
 
         <div className="flex items-center gap-3 py-4">
+          <FaPhoneAlt className="text-green-600 w-5 h-5" />
+          <span className="font-medium text-gray-700">Phone:</span>
+          <span className="text-gray-900">
+            {userData.phone || "Not provided"}
+          </span>
+        </div>
+
+        <div className="flex items-center gap-3 py-4">
+          <FaHome className="text-pink-600 w-5 h-5" />
+          <span className="font-medium text-gray-700">Address:</span>
+          <span className="text-gray-900">
+            {userData.address || "Not provided"}
+          </span>
+        </div>
+        <div className="flex items-center gap-3 py-4">
           <FaShieldAlt className="text-green-600 w-5 h-5" />
           <span className="font-medium text-gray-700">Role:</span>
           <span
@@ -92,6 +114,14 @@ const MyProfile = () => {
             }`}
           >
             {userData.role}
+          </span>
+        </div>
+
+        <div className="flex items-center gap-3 py-4">
+          <MdOutlinePayment className="text-blue-800 w-5 h-5" />
+          <span className="font-medium text-gray-700">Plan:</span>
+          <span className="text-blue-600 font-bold">
+            {plan || "No Plan Choosen"}
           </span>
         </div>
 

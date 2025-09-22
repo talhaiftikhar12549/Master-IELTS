@@ -17,12 +17,20 @@ export const register = async (req, res) => {
     phone,
     address,
     role,
-    plan, 
-    hasPaid, 
+    plan,
+    hasPaid,
   } = req.body;
 
   // Basic validation
-  if (!name || !email || !password || !phone || !address || !confirmPassword || !role) {
+  if (
+    !name ||
+    !email ||
+    !password ||
+    !phone ||
+    !address ||
+    !confirmPassword ||
+    !role
+  ) {
     return res.status(400).json({ message: "All fields are required" });
   }
 
@@ -44,11 +52,11 @@ export const register = async (req, res) => {
     phone,
     address,
     role,
-    plan: plan || null, 
+    plan: plan || null,
     hasPaid: hasPaid || false,
     planStartDate: hasPaid ? new Date() : null,
     planEndDate: hasPaid
-      ? new Date(new Date().setMonth(new Date().getMonth() + 1)) // default 1 month
+      ? new Date(new Date().setFullYear(new Date().getFullYear() + 1)) // default 1 year
       : null,
   });
 

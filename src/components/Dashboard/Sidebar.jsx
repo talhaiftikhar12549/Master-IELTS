@@ -20,7 +20,7 @@ import { MdPayment } from "react-icons/md";
 
 export const Sidebar = () => {
   const location = useLocation();
-  const { user, logout } = useAuth();
+  const { user, logout, plan } = useAuth();
 
   const linkClasses = ({ isActive }) =>
     `flex items-center gap-3 w-full px-5 py-3 rounded-xl transition-all duration-300 font-medium
@@ -62,15 +62,15 @@ export const Sidebar = () => {
 
         {user && user?.role !== "student" && (
           <>
-          <NavLink to="create-plans" className={linkClasses}>
-            <MdPayment size={20} />
-            Payment Plans
-          </NavLink>
-          
-          <NavLink to="quiz-builder" className={linkClasses}>
-            <FiFileText size={20} />
-            Quiz Builder
-          </NavLink>
+            <NavLink to="create-plans" className={linkClasses}>
+              <MdPayment size={20} />
+              Payment Plans
+            </NavLink>
+
+            <NavLink to="quiz-builder" className={linkClasses}>
+              <FiFileText size={20} />
+              Quiz Builder
+            </NavLink>
           </>
         )}
 
@@ -120,14 +120,18 @@ export const Sidebar = () => {
           </NavLink>
         )}
 
-        <NavLink to="community" className={linkClasses}>
-          <FiMessageSquare size={20} />
-          Community
-        </NavLink>
+        {plan === "Premium" && (
+          <NavLink to="community" className={linkClasses}>
+            <FiMessageSquare size={20} />
+            Community
+          </NavLink>
+        )}
 
-        <NavLink to="my-qas" className={linkClasses}>
-          <FaRegQuestionCircle size={20} />Q & A
-        </NavLink>
+        {plan === "Premium" && (
+          <NavLink to="my-qas" className={linkClasses}>
+            <FaRegQuestionCircle size={20} />Q & A
+          </NavLink>
+        )}
       </div>
 
       {/* Logout Button */}

@@ -77,7 +77,7 @@ const Cart = () => {
 
       {/* CART CONTAINER */}
       <div className="w-full flex justify-center items-center bg-white shadow-xl rounded-md overflow-hidden">
-        {cart.length !== 0 ? (
+        {cart?.length !== 0 ? (
           <div className="w-full md:w-[80%] p-6 sm:p-10 flex flex-col gap-6">
             <div className="flex justify-between items-center border-b pb-4">
               <div>

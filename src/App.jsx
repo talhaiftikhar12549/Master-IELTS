@@ -37,6 +37,7 @@ import api from "./services/api";
 import NotesModal from "./components/Modals/NotesModal";
 import ThankYou from "./pages/ThankYou";
 import CreatePlans from "./pages/Dashboard/CreatePlans";
+import { Bounce, ToastContainer } from "react-toastify";
 
 function App() {
   const [isOpen, setIsOpen] = useState(false);
@@ -67,7 +68,7 @@ function App() {
     };
 
     fetchUser();
-  }, [userID]);
+  }, []);
 
   useEffect(() => {
     if (!userData?.hasPaid) return;
@@ -125,6 +126,20 @@ function App() {
             setNote={setNote}
             handleClear={handleClear}
             handleSave={handleSave}
+          />
+
+          <ToastContainer
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick={false}
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+            transition={Bounce}
           />
         </>
       )}

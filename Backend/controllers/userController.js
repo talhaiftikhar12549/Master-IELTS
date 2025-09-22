@@ -25,7 +25,7 @@ export const getUserById = async (req, res) => {
 // CREATE user (SuperAdmin only)
 export const createUser = async (req, res) => {
   try {
-    const { name, email, phone, address, password, role } = req.body;
+    const { name, email, phone, address, plan, password, role } = req.body;
 
     const userExists = await User.findOne({ email });
     if (userExists)
@@ -37,6 +37,7 @@ export const createUser = async (req, res) => {
       email,
       phone,
       address,
+      plan,
       password: hashed,
       role,
     });

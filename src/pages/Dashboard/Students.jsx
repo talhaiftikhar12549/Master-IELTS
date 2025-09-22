@@ -10,16 +10,16 @@ export default function Students() {
   const [isQuizzesModalOpen, setIsQuizzesModalOpen] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState(null);
 
+  const fetchStudents = async () => {
+    try {
+      const res = await api.get("/users");
+      setStudents(res.data);
+    } catch (err) {
+      console.error("Error fetching students:", err);
+    }
+  };
+
   useEffect(() => {
-    const fetchStudents = async () => {
-      try {
-        const res = await api.get("/users");
-        setStudents(res.data);
-        console.log(res.data);
-      } catch (err) {
-        console.error("Error fetching students:", err);
-      }
-    };
     fetchStudents();
   }, []);
 
@@ -33,9 +33,16 @@ export default function Students() {
     setIsQuizzesModalOpen(true);
   };
 
-  const handleDelete = (studentId) => {
+  const handleDelete = async (studentId) => {
     if (window.confirm("Are you sure you want to delete this student?")) {
-      console.log("Delete student:", studentId);
+      try {
+        // Run DELETE request
+        await api.delete(`/users/${studentId}`);
+        fetchStudents();
+      } catch (err) {
+        console.error("Failed to delete student:", err);
+        alert("Error deleting student");
+      }
     }
   };
 
@@ -107,7 +114,6 @@ export default function Students() {
           </tbody>
         </table>
       </div>
-    
 
       <StudentsProgressModal
         isProgressModalOpen={isProgressModalOpen}

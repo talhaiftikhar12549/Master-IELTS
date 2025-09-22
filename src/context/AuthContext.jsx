@@ -1,12 +1,15 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser, registerUser } from "../services/authService";
+import api from "../services/api";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
+  const [userData, setUserData] = useState(null);
+  const [plan, setPlan] = useState("")
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
 
@@ -20,9 +23,10 @@ export const AuthProvider = ({ children }) => {
         token: userData.token,
         id: userData._id,
         role: userData.role,
+        plan: userData.plan,
         ...userData.user, // agar backend user object bhej raha hai
       });
-      
+
       setIsAuthenticated(true);
       localStorage.setItem(
         "user",
@@ -30,6 +34,7 @@ export const AuthProvider = ({ children }) => {
           token: userData.token,
           id: userData._id,
           role: userData.role,
+          plan: userData.plan,
           ...userData.user,
         })
       );
@@ -83,10 +88,36 @@ export const AuthProvider = ({ children }) => {
     setLoading(false);
   }, []);
 
+  const userr = localStorage.getItem("user");
+  const userID = userr ? JSON.parse(userr) : null;
+
+  useEffect(() => {
+    if (!userID?.id) return;
+
+    const fetchUser = async () => {
+      try {
+        setLoading(true);
+        const res = await api.get(`/users/${userID.id}`);
+        setUserData(res.data);
+         const plan = await api.get(`/plans/${res.data.plan}`);
+         setPlan(plan.data.title)
+              
+      } catch (err) {
+        console.error("Failed to fetch user", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUser();
+  }, []);
+
   return (
     <AuthContext.Provider
       value={{
         user,
+        userData,
+        plan,
         isAuthenticated,
         login,
         register,
