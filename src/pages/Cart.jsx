@@ -25,10 +25,9 @@ const Cart = () => {
   }, []);
 
   // Remove single item
-  const handleRemove = (planId) => {
-    const updatedCart = cart.filter((item) => item.planId !== planId);
-    setCart(updatedCart);
-    localStorage.setItem("guestCart", JSON.stringify(updatedCart));
+  const handleRemove = () => {
+    setCart(null);
+    localStorage.removeItem("guestCart");
   };
 
   // Clear all cart
@@ -40,6 +39,7 @@ const Cart = () => {
   // Checkout (send cart items to backend)
   const handleCheckout = async () => {
     const cart = JSON.parse(localStorage.getItem("guestCart"));
+    if (!cart) return;
 
     try {
       const res = await api.post("/order", {
@@ -58,10 +58,9 @@ const Cart = () => {
   }
 
   // Calculate total
-  const totalPrice = cart.reduce((acc, item) => {
-    const price = item.discPrice || item.actualPrice;
-    return acc + price * item.quantity;
-  }, 0);
+  const totalPrice = cart
+    ? (cart.discPrice || cart.actualPrice) * cart.quantity
+    : 0;
 
   return (
     <div className="w-2/3 lg:px-[40px] xl:px-0 px-[16px] mx-auto flex flex-col items-center pt-20 pb-[200px]">
@@ -77,35 +76,24 @@ const Cart = () => {
 
       {/* CART CONTAINER */}
       <div className="w-full flex justify-center items-center bg-white shadow-xl rounded-md overflow-hidden">
-        {cart && cart.length > 0 ? (
+        {cart ? (
           <div className="w-full md:w-[80%] p-6 sm:p-10 flex flex-col gap-6">
-            {/* Cart Items */}
-            {cart.map((item) => {
-              const price = item.discPrice || item.actualPrice;
-              return (
-                <div
-                  key={item.planId}
-                  className="flex justify-between items-center border-b pb-4"
-                >
-                  <div>
-                    <h2 className="text-xl font-semibold">{item.title}</h2>
-                    <p className="text-gray-600">
-                      Price: ${price} × {item.quantity}
-                    </p>
-                    <p className="font-bold mt-1">
-                      Subtotal: ${price * item.quantity}
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => handleRemove(item.planId)}
-                    className="flex items-center cursor-pointer px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
-                  >
-                    <IoMdTrash className="mr-2" />
-                    Remove
-                  </button>
-                </div>
-              );
-            })}
+            <div className="flex justify-between items-center border-b pb-4">
+              <div>
+                <h2 className="text-xl font-semibold">{cart.title}</h2>
+                <p className="text-gray-600">
+                  Price: ${cart.discPrice || cart.actualPrice} × {cart.quantity}
+                </p>
+                <p className="font-bold mt-1">Subtotal: ${totalPrice}</p>
+              </div>
+              <button
+                onClick={handleRemove}
+                className="flex items-center cursor-pointer px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+              >
+                <IoMdTrash className="mr-2" />
+                Remove
+              </button>
+            </div>
 
             {/* Summary */}
             <div className="flex flex-col md:flex-row md:justify-between items-center mt-4">
@@ -114,7 +102,7 @@ const Cart = () => {
               </h2>
               <div className="flex space-x-4">
                 <button
-                  onClick={handleClearCart}
+                  onClick={handleRemove}
                   className="px-6 py-2 bg-gray-500 cursor-pointer text-white rounded-lg hover:bg-gray-600"
                 >
                   Clear Cart
@@ -129,6 +117,7 @@ const Cart = () => {
             </div>
           </div>
         ) : (
+          // Empty cart message
           <div className="w-full py-20 text-center">
             <h2 className="text-2xl font-semibold mb-4">Your cart is empty</h2>
             <button

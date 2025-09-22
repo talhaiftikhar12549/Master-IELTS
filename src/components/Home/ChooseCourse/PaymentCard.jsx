@@ -12,36 +12,19 @@ const PaymentCard = ({
 }) => {
   const navigate = useNavigate();
 
- const handleAddToCart = () => {
-  try {
-    // Get existing cart from localStorage
-    let guestCart = JSON.parse(localStorage.getItem("guestCart")) || [];
+  const handleAddToCart = async () => {
+  const newCartItem = {
+    planId: id,
+    title,
+    actualPrice,
+    discPrice,
+    quantity: 1,
+  };
 
-    // Check if plan already exists in cart
-    const existingItem = guestCart.find((item) => item.planId === id);
+  // overwrite previous cart
+  localStorage.setItem("guestCart", JSON.stringify(newCartItem));
 
-    if (existingItem) {
-      // Update quantity if already in cart
-      existingItem.quantity += 1;
-    } else {
-      // Add new item
-      guestCart.push({
-        planId: id,
-        title,
-        actualPrice,
-        discPrice,
-        quantity: 1,
-      });
-    }
-
-    // Save back to localStorage
-    localStorage.setItem("guestCart", JSON.stringify(guestCart));
-
-    // Redirect to cart page
-    navigate("/cart");
-  } catch (err) {
-    console.error("Error adding to cart", err);
-  }
+  navigate("/cart");
 };
 
   return (
