@@ -81,9 +81,9 @@ const Cart = () => {
           <div className="w-full md:w-[80%] p-6 sm:p-10 flex flex-col gap-6">
             <div className="flex justify-between items-center border-b pb-4">
               <div>
-                <h2 className="text-xl font-semibold">{cart.title}</h2>
+                <h2 className="text-xl font-semibold">{cart?.title}</h2>
                 <p className="text-gray-600">
-                  Price: ${cart.discPrice || cart.actualPrice} × {cart.quantity}
+                  Price: ${cart?.discPrice || cart?.actualPrice} × {cart?.quantity}
                 </p>
                 <p className="font-bold mt-1">Subtotal: ${totalPrice}</p>
               </div>
