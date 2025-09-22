@@ -5,12 +5,12 @@ import { protect } from "../middleware/authMiddleware.js";
 const router = express.Router();
 
 // Create new order from cart
-router.post("/", protect, createOrder);
+router.post("/", createOrder);
 
 // Get user orders
-router.get("/", protect, getOrders);
+router.get("/", getOrders);
 
 // Get single order
-router.get("/:id", protect, getOrderById);
+router.get("/:id", getOrderById);
 
 export default router;

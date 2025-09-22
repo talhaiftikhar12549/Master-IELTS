@@ -52,7 +52,6 @@ const CheckoutForm = ({ orderId, plan }) => {
     e.preventDefault();
     if (!stripe || !elements || !clientSecret) return;
 
-    // basic password check
     if (formData.password !== formData.confirmPassword) {
       setErrors({ confirmPassword: "Passwords do not match" });
       return;
@@ -76,10 +75,12 @@ const CheckoutForm = ({ orderId, plan }) => {
       setMessage("✅ Payment successful!");
 
       try {
-        // Create user + assign plan in backend
+        // Register the user and assign plan
         await api.post("/auth/register", {
-          ...formData,
-          plan: plan._id, // attach selected plan
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+          planId: plan._id, // safer: just send the ID
           hasPaid: true,
         });
 
@@ -164,10 +165,13 @@ const Checkout = () => {
   const [plan, setPlan] = useState(null);
 
   useEffect(() => {
-    // fetch order and attached plan info
     const fetchOrder = async () => {
-      const res = await api.get(`/order/${orderId}`);
-      setPlan(res.data.plan);
+      try {
+        const res = await api.get(`/order/${orderId}`);
+        setPlan(res.data.plan);
+      } catch (err) {
+        console.error("Error fetching order:", err);
+      }
     };
     if (orderId) fetchOrder();
   }, [orderId]);

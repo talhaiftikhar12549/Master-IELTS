@@ -12,20 +12,38 @@ const PaymentCard = ({
 }) => {
   const navigate = useNavigate();
 
-  const handleAddToCart = async () => {
-    try {
-      // Add selected plan to cart
-      await api.post("/cart", {
+ const handleAddToCart = () => {
+  try {
+    // Get existing cart from localStorage
+    let guestCart = JSON.parse(localStorage.getItem("guestCart")) || [];
+
+    // Check if plan already exists in cart
+    const existingItem = guestCart.find((item) => item.planId === id);
+
+    if (existingItem) {
+      // Update quantity if already in cart
+      existingItem.quantity += 1;
+    } else {
+      // Add new item
+      guestCart.push({
         planId: id,
+        title,
+        actualPrice,
+        discPrice,
         quantity: 1,
       });
-
-      // Redirect user to Cart page
-      navigate("/cart");
-    } catch (err) {
-      console.error("Error adding to cart", err);
     }
-  };
+
+    // Save back to localStorage
+    localStorage.setItem("guestCart", JSON.stringify(guestCart));
+
+    // Redirect to cart page
+    navigate("/cart");
+  } catch (err) {
+    console.error("Error adding to cart", err);
+  }
+};
+
   return (
     <div
       key={id}
