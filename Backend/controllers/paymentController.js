@@ -18,7 +18,7 @@ export const createPaymentIntent = async (req, res) => {
       currency: "usd",
       metadata: {
         orderId: order._id.toString(),
-        userId: order.user.toString(),
+        userId: order.user ? order.user.toString() : "guest",
       },
     });
 
