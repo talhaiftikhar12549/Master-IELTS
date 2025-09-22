@@ -14,13 +14,15 @@ export const register = async (req, res) => {
     email,
     password,
     confirmPassword,
+    phone,
+    address,
     role,
     plan, 
     hasPaid, 
   } = req.body;
 
   // Basic validation
-  if (!name || !email || !password || !confirmPassword || !role) {
+  if (!name || !email || !password || !phone || !address || !confirmPassword || !role) {
     return res.status(400).json({ message: "All fields are required" });
   }
 
@@ -39,6 +41,8 @@ export const register = async (req, res) => {
     name,
     email,
     password: hashedPassword,
+    phone,
+    address,
     role,
     plan: plan || null, 
     hasPaid: hasPaid || false,
@@ -52,6 +56,8 @@ export const register = async (req, res) => {
     _id: user._id,
     name: user.name,
     email: user.email,
+    phone: user.phone,
+    address: user.address,
     role: user.role,
     plan: user.plan,
     hasPaid: user.hasPaid,
@@ -82,6 +88,8 @@ export const login = async (req, res) => {
     _id: user._id,
     name: user.name,
     email: user.email,
+    phone: user.phone,
+    address: user.address,
     role: user.role,
     token: generateToken(user),
   });
