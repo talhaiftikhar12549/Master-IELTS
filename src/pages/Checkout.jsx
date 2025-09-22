@@ -105,7 +105,7 @@ const CheckoutForm = ({ orderId, plan }) => {
             required
           />
           <input
-            type="tel"
+            type="number"
             name="phone"
             placeholder="Phone"
             className="w-full mb-2 p-2 border rounded"
