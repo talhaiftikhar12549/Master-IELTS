@@ -28,6 +28,7 @@ const Cart = () => {
   const handleRemove = () => {
     setCart(null);
     localStorage.removeItem("guestCart");
+    navigate("/")
   };
 
   // Clear all cart
