@@ -39,22 +39,45 @@ export const createOrder = async (req, res) => {
 // Get all orders for user
 export const getOrders = async (req, res) => {
   try {
+    if (!req.user) {
+      return res
+        .status(401)
+        .json({ message: "Login required to view your orders" });
+    }
+
     const orders = await Order.find({ user: req.user.id }).populate("plan");
     res.json(orders);
   } catch (err) {
-    res.status(500).json({ message: "Error fetching orders", error: err.message });
+    res
+      .status(500)
+      .json({ message: "Error fetching orders", error: err.message });
   }
 };
 
-// Get order by ID
+// Get order by ID (works for both user and guest)
 export const getOrderById = async (req, res) => {
   try {
-    const order = await Order.findOne({ _id: req.params.id, user: req.user.id }).populate("plan");
+    let order;
+
+    if (req.user) {
+      // Logged-in user: make sure order belongs to them
+      order = await Order.findOne({
+        _id: req.params.id,
+        user: req.user.id,
+      }).populate("plan");
+    } else {
+      // Guest: just fetch by orderId (stored in localStorage on frontend)
+      order = await Order.findById(req.params.id).populate("plan");
+    }
+
     if (!order) {
       return res.status(404).json({ message: "Order not found" });
     }
+
     res.json(order);
   } catch (err) {
-    res.status(500).json({ message: "Error fetching order", error: err.message });
+    res
+      .status(500)
+      .json({ message: "Error fetching order", error: err.message });
   }
 };
