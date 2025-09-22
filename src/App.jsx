@@ -49,40 +49,43 @@ function App() {
   const [userData, setUserData] = useState(null);
 
   const user = localStorage.getItem("user");
-  const userID = JSON.parse(user);
+  const userID = user ? JSON.parse(user) : null;
 
   useEffect(() => {
+    if (!userID?.id) return; // 👈 skip fetch for guests
+
     const fetchUser = async () => {
       try {
         setLoading(true);
         const res = await api.get(`/users/${userID.id}`);
         setUserData(res.data);
       } catch (err) {
+        console.error("Failed to fetch user", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUser();
+  }, [userID]);
+
+  useEffect(() => {
+    if (!userData?.hasPaid) return;
+
+    const fetchNote = async () => {
+      try {
+        setLoading(true);
+        const res = await api.get("/notes");
+        setNote(res.data.data);
+      } catch (err) {
         console.error("Failed to fetch note", err);
       } finally {
         setLoading(false);
       }
     };
-    fetchUser();
-  }, []);  
 
-  useEffect(() => {
-  if (!userData?.hasPaid) return;
-
-  const fetchNote = async () => {
-    try {
-      setLoading(true);
-      const res = await api.get("/notes");
-      setNote(res.data.data);
-    } catch (err) {
-      console.error("Failed to fetch note", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  fetchNote();
-}, [userData?.hasPaid]);
+    fetchNote();
+  }, [userData?.hasPaid]);
 
   // Update note API call
   const handleSave = async () => {

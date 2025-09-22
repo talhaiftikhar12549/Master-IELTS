@@ -1,30 +1,36 @@
-import User from '../models/userModel.js';
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
+import User from "../models/userModel.js";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 const generateToken = (user) => {
-  return jwt.sign(
-    { id: user._id, role: user.role },
-    process.env.JWT_SECRET,
-    { expiresIn: '7d' }
-  );
+  return jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
+    expiresIn: "7d",
+  });
 };
 
 export const register = async (req, res) => {
-  const { name, email, password, confirmPassword, role } = req.body;
+  const {
+    name,
+    email,
+    password,
+    confirmPassword,
+    role,
+    plan, 
+    hasPaid, 
+  } = req.body;
 
   // Basic validation
   if (!name || !email || !password || !confirmPassword || !role) {
-    return res.status(400).json({ message: 'All fields are required' });
+    return res.status(400).json({ message: "All fields are required" });
   }
 
   if (password !== confirmPassword) {
-    return res.status(400).json({ message: 'Passwords do not match' });
+    return res.status(400).json({ message: "Passwords do not match" });
   }
 
   const existingUser = await User.findOne({ email });
   if (existingUser) {
-    return res.status(400).json({ message: 'User already exists' });
+    return res.status(400).json({ message: "User already exists" });
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -34,6 +40,12 @@ export const register = async (req, res) => {
     email,
     password: hashedPassword,
     role,
+    plan: plan || null, 
+    hasPaid: hasPaid || false,
+    planStartDate: hasPaid ? new Date() : null,
+    planEndDate: hasPaid
+      ? new Date(new Date().setMonth(new Date().getMonth() + 1)) // default 1 month
+      : null,
   });
 
   res.status(201).json({
@@ -41,6 +53,10 @@ export const register = async (req, res) => {
     name: user.name,
     email: user.email,
     role: user.role,
+    plan: user.plan,
+    hasPaid: user.hasPaid,
+    planStartDate: user.planStartDate,
+    planEndDate: user.planEndDate,
     token: generateToken(user),
   });
 };
@@ -49,17 +65,17 @@ export const login = async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return res.status(400).json({ message: 'Email and password required' });
+    return res.status(400).json({ message: "Email and password required" });
   }
 
   const user = await User.findOne({ email });
   if (!user) {
-    return res.status(401).json({ message: 'Invalid email or password' });
+    return res.status(401).json({ message: "Invalid email or password" });
   }
 
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) {
-    return res.status(401).json({ message: 'Invalid email or password' });
+    return res.status(401).json({ message: "Invalid email or password" });
   }
 
   res.status(200).json({

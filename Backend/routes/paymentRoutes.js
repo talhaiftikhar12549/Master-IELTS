@@ -8,9 +8,9 @@ import { protect } from '../middleware/authMiddleware.js';
 const router = express.Router();
 
 // create stripe payment intent
-router.post('/create-intent', protect, createPaymentIntent);
+router.post('/create-intent', createPaymentIntent);
 
 // confirm payment (webhook usually, but also client-side confirm)
-router.post('/confirm', protect, confirmPayment);
+router.post('/confirm', confirmPayment);
 
 export default router;

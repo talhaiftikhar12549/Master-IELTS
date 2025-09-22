@@ -8,22 +8,28 @@ import {
   useStripe,
 } from "@stripe/react-stripe-js";
 import api from "../services/api";
-import { useAuth } from "../context/AuthContext";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
-const CheckoutForm = ({ orderId }) => {
+const CheckoutForm = ({ orderId, plan }) => {
   const stripe = useStripe();
   const elements = useElements();
-
-  const {user} = useAuth()
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const [clientSecret, setClientSecret] = useState(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
-  // 1. Fetch client secret for this order
+  // Registration state
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+  const [errors, setErrors] = useState({});
+
+  // fetch client secret
   useEffect(() => {
     const fetchIntent = async () => {
       try {
@@ -37,61 +43,117 @@ const CheckoutForm = ({ orderId }) => {
     if (orderId) fetchIntent();
   }, [orderId]);
 
-  // 2. Handle Stripe payment
- const handleSubmit = async (e) => {
-  e.preventDefault();
-  if (!stripe || !elements || !clientSecret) return;
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
-  setLoading(true);
-  setMessage("");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!stripe || !elements || !clientSecret) return;
 
-  const card = elements.getElement(CardElement);
-
-  const { error, paymentIntent } = await stripe.confirmCardPayment(
-    clientSecret,
-    {
-      payment_method: { card },
-    }
-  );
-
-  if (error) {
-    setMessage(error.message || "Payment failed.");
-  } else if (paymentIntent.status === "succeeded") {
-    setMessage("✅ Payment successful!");
-
-    try {
-      // 🔹 Update user as paid
-      await api.put(`/users/${user.id}`, { hasPaid: true });
-      navigate("/success")
-    } catch (err) {
-      console.error("Error updating user payment status:", err);
+    // basic password check
+    if (formData.password !== formData.confirmPassword) {
+      setErrors({ confirmPassword: "Passwords do not match" });
+      return;
     }
 
-    // Optionally navigate to thank-you or dashboard
-    // navigate("/thank-you");
-  }
+    setLoading(true);
+    setMessage("");
 
-  setLoading(false);
-};
+    const card = elements.getElement(CardElement);
+
+    const { error, paymentIntent } = await stripe.confirmCardPayment(
+      clientSecret,
+      {
+        payment_method: { card },
+      }
+    );
+
+    if (error) {
+      setMessage(error.message || "Payment failed.");
+    } else if (paymentIntent.status === "succeeded") {
+      setMessage("✅ Payment successful!");
+
+      try {
+        // Create user + assign plan in backend
+        await api.post("/auth/register", {
+          ...formData,
+          plan: plan._id, // attach selected plan
+          hasPaid: true,
+        });
+
+        navigate("/success");
+      } catch (err) {
+        console.error("Error creating user after payment:", err);
+        setMessage("User creation failed, but payment succeeded.");
+      }
+    }
+
+    setLoading(false);
+  };
 
   if (!clientSecret) {
     return <p className="text-center mt-20">Preparing checkout...</p>;
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="w-full max-w-md mx-auto p-6 border rounded-lg shadow"
-    >
-      <CardElement className="p-3 border rounded mb-4" />
-      <button
-        type="submit"
-        disabled={!stripe || loading}
-        className="bg-blue-600 text-white px-4 py-2 rounded w-full"
-      >
-        {loading ? "Processing..." : "Pay Now"}
-      </button>
-      {message && <p className="mt-4 text-center">{message}</p>}
+    <form onSubmit={handleSubmit} className="w-full flex flex-col gap-6">
+      {/* Registration fields */}
+      <div className="bg-gray-50 p-4 rounded shadow">
+        <h3 className="font-bold mb-2">Register for {plan.title} Plan</h3>
+
+        <input
+          type="text"
+          name="name"
+          placeholder="Name"
+          className="w-full mb-2 p-2 border rounded"
+          onChange={handleChange}
+          required
+        />
+        <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          className="w-full mb-2 p-2 border rounded"
+          onChange={handleChange}
+          required
+        />
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          className="w-full mb-2 p-2 border rounded"
+          onChange={handleChange}
+          required
+        />
+        <input
+          type="password"
+          name="confirmPassword"
+          placeholder="Confirm Password"
+          className="w-full mb-2 p-2 border rounded"
+          onChange={handleChange}
+          required
+        />
+        {errors.confirmPassword && (
+          <p className="text-red-500 text-sm">{errors.confirmPassword}</p>
+        )}
+      </div>
+
+      {/* Stripe payment fields */}
+      <div className="bg-white p-4 rounded shadow">
+        <CardElement className="p-3 border rounded mb-4" />
+        <button
+          type="submit"
+          disabled={!stripe || loading}
+          className="bg-blue-600 text-white px-4 py-2 rounded w-full"
+        >
+          {loading
+            ? "Processing..."
+            : `Pay ${plan.discPrice || plan.actualPrice} USD`}
+        </button>
+        {message && <p className="mt-4 text-center">{message}</p>}
+      </div>
     </form>
   );
 };
@@ -99,17 +161,33 @@ const CheckoutForm = ({ orderId }) => {
 const Checkout = () => {
   const [searchParams] = useSearchParams();
   const orderId = searchParams.get("orderId");
+  const [plan, setPlan] = useState(null);
+
+  useEffect(() => {
+    // fetch order and attached plan info
+    const fetchOrder = async () => {
+      const res = await api.get(`/order/${orderId}`);
+      setPlan(res.data.plan);
+    };
+    if (orderId) fetchOrder();
+  }, [orderId]);
 
   if (!orderId) {
     return <p className="text-center mt-20">❌ Missing order information.</p>;
   }
 
+  if (!plan) {
+    return <p className="text-center mt-20">Loading plan...</p>;
+  }
+
   return (
     <div className="w-full flex justify-center items-center min-h-screen bg-gray-100">
       <div className="w-[500px] p-6 bg-white shadow-md rounded-xl">
-        <h2 className="text-2xl font-bold mb-6 text-center">Checkout</h2>
+        <h2 className="text-2xl font-bold mb-6 text-center">
+          Checkout for {plan.title}
+        </h2>
         <Elements stripe={stripePromise}>
-          <CheckoutForm orderId={orderId} />
+          <CheckoutForm orderId={orderId} plan={plan} />
         </Elements>
       </div>
     </div>
