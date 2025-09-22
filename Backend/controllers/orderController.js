@@ -5,26 +5,19 @@ import Plan from "../models/Plan.js";
 // Create order from cart
 export const createOrder = async (req, res) => {
   try {
-    const userId = req.user.id;
-
-    // Find cart for user
-    const cart = await Cart.findOne({ user: userId }).populate("plan");
-    if (!cart) {
-      return res.status(400).json({ message: "Cart is empty" });
-    }
+    const { planId, quantity, guestEmail } = req.body;
 
     // Ensure plan still exists
-    const plan = await Plan.findById(cart.plan._id);
+    const plan = await Plan.findById(planId);
     if (!plan) {
       return res.status(404).json({ message: "Selected plan not found" });
     }
 
-    // Calculate total amount
-    const totalAmount = (plan.discPrice || plan.actualPrice) * cart.quantity;
+    const totalAmount = (plan.discPrice || plan.actualPrice) * quantity;
 
-    // Create new order
     const order = new Order({
-      user: userId,
+      user: req.user ? req.user.id : null, // logged in or guest
+      guestEmail: req.user ? null : guestEmail,
       plan: plan._id,
       totalAmount,
       status: "pending",
@@ -32,8 +25,10 @@ export const createOrder = async (req, res) => {
 
     await order.save();
 
-    // Clear cart after order creation
-    await Cart.findOneAndDelete({ user: userId });
+    // Clear user cart if logged in
+    if (req.user) {
+      await Cart.findOneAndDelete({ user: req.user.id });
+    }
 
     res.status(201).json(order);
   } catch (err) {
