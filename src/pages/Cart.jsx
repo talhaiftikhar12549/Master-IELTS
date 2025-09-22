@@ -39,8 +39,13 @@ const Cart = () => {
 
   // Checkout (send cart items to backend)
   const handleCheckout = async () => {
+    const cart = JSON.parse(localStorage.getItem("guestCart"));
+
     try {
-      const res = await api.post("/order", { items: cart });
+      const res = await api.post("/order", {
+        planId: cart.planId,
+        quantity: cart.quantity,
+      });
       const orderId = res.data._id;
       navigate(`/checkout?orderId=${orderId}`);
     } catch (err) {

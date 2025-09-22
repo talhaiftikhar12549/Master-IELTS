@@ -5,9 +5,10 @@ import Plan from "../models/Plan.js";
 // Create order from cart
 export const createOrder = async (req, res) => {
   try {
-    const { planId, quantity, guestEmail } = req.body;
+    const { planId, quantity } = req.body;
+    const userId = req.user ? req.user.id : null;
 
-    // Ensure plan still exists
+    // Ensure plan exists
     const plan = await Plan.findById(planId);
     if (!plan) {
       return res.status(404).json({ message: "Selected plan not found" });
@@ -16,8 +17,7 @@ export const createOrder = async (req, res) => {
     const totalAmount = (plan.discPrice || plan.actualPrice) * quantity;
 
     const order = new Order({
-      user: req.user ? req.user.id : null, // logged in or guest
-      guestEmail: req.user ? null : guestEmail,
+      user: userId, // guests: null
       plan: plan._id,
       totalAmount,
       status: "pending",
@@ -26,8 +26,8 @@ export const createOrder = async (req, res) => {
     await order.save();
 
     // Clear user cart if logged in
-    if (req.user) {
-      await Cart.findOneAndDelete({ user: req.user.id });
+    if (userId) {
+      await Cart.findOneAndDelete({ user: userId });
     }
 
     res.status(201).json(order);
