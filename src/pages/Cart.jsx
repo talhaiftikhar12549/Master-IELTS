@@ -39,6 +39,7 @@ const Cart = () => {
   // Checkout (send cart items to backend)
   const handleCheckout = async () => {
     const cart = JSON.parse(localStorage.getItem("guestCart"));
+
     if (!cart) return;
 
     try {
@@ -72,11 +73,11 @@ const Cart = () => {
       <div className="w-full flex flex-col text-center py-10 space-y-2">
         <h1 className="font-bold text-[40px]">Your Cart</h1>
         <p>Review your selected plan before checkout</p>
-      </div>
+      </div>      
 
       {/* CART CONTAINER */}
       <div className="w-full flex justify-center items-center bg-white shadow-xl rounded-md overflow-hidden">
-        {cart ? (
+        {cart.length !== 0 ? (
           <div className="w-full md:w-[80%] p-6 sm:p-10 flex flex-col gap-6">
             <div className="flex justify-between items-center border-b pb-4">
               <div>
