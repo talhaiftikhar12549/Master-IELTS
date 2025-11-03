@@ -1,0 +1,1 @@
+export const uploadFile = (file) => { console.log('File uploaded'); return 'url'; };

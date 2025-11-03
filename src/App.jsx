@@ -36,6 +36,8 @@ import { useEffect, useState } from "react";
 import api from "./services/api";
 import NotesModal from "./components/Modals/NotesModal";
 import ThankYou from "./pages/ThankYou";
+import CreatePlans from "./pages/Dashboard/CreatePlans";
+import { Bounce, ToastContainer } from "react-toastify";
 
 function App() {
   const [isOpen, setIsOpen] = useState(false);
@@ -45,28 +47,46 @@ function App() {
     color: "#fff8b5",
   });
   const [loading, setLoading] = useState(false);
+  const [userData, setUserData] = useState(null);
 
   const user = localStorage.getItem("user");
-  const token = localStorage.getItem("token");
+  const userID = user ? JSON.parse(user) : null;
 
-  {
-    user &&
-      token &&
-      useEffect(() => {
-        const fetchNote = async () => {
-          try {
-            setLoading(true);
-            const res = await api.get("/notes");
-            setNote(res.data.data);
-          } catch (err) {
-            console.error("Failed to fetch note", err);
-          } finally {
-            setLoading(false);
-          }
-        };
-        fetchNote();
-      }, []);
-  }
+  useEffect(() => {
+    if (!userID?.id) return; // 👈 skip fetch for guests
+
+    const fetchUser = async () => {
+      try {
+        setLoading(true);
+        const res = await api.get(`/users/${userID.id}`);
+        setUserData(res.data);
+      } catch (err) {
+        console.error("Failed to fetch user", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUser();
+  }, []);
+
+  useEffect(() => {
+    if (!userData?.hasPaid) return;
+
+    const fetchNote = async () => {
+      try {
+        setLoading(true);
+        const res = await api.get("/notes");
+        setNote(res.data.data);
+      } catch (err) {
+        console.error("Failed to fetch note", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchNote();
+  }, [userData?.hasPaid]);
 
   // Update note API call
   const handleSave = async () => {
@@ -89,7 +109,7 @@ function App() {
 
   return (
     <AuthProvider>
-      {user && token && (
+      {userData?.hasPaid && (
         <>
           <button
             onClick={() => setIsOpen(true)}
@@ -106,6 +126,20 @@ function App() {
             setNote={setNote}
             handleClear={handleClear}
             handleSave={handleSave}
+          />
+
+          <ToastContainer
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick={false}
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+            transition={Bounce}
           />
         </>
       )}
@@ -139,6 +173,7 @@ function App() {
           <Route path="create-course" element={<CreateCourse />} />
           <Route path="create-topics" element={<CreateTopics />} />
           <Route path="create-lessons" element={<CreateLessons />} />
+          <Route path="create-plans" element={<CreatePlans />} />
           <Route path="profile" element={<MyProfile />} />
           <Route path="create-blogs" element={<CreateBlogs />} />
           <Route path="quiz-attempts" element={<QuizAttempts />} />

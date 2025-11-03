@@ -5,18 +5,19 @@ import { IoClose } from "react-icons/io5";
 import { Helmet } from "react-helmet";
 import ForumPageSkeleton from "../components/Community/ForumsSkeleton";
 import { PostsCard } from "../components/Community/PostsCard";
-
+import { useNavigate } from "react-router-dom";
 
 export default function Posts() {
   const [posts, setPosts] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [newPost, setNewPost] = useState({ title: "", body: "" });
+  const getSelectedCategory = "";
+  const getSelectedCommunity = "";
 
-  const getSelectedCategory = ""
-  const getSelectedCommunity = ""
+  const { user, plan } = useAuth();
 
-  const { user } = useAuth();
+  const navigate = useNavigate();
 
   const communities = [
     { value: "", label: "All" },
@@ -27,7 +28,7 @@ export default function Posts() {
     { value: "Speaking", label: "Speaking" },
   ];
 
-  const getSearch = ""
+  const getSearch = "";
 
   useEffect(() => {
     fetchPosts();
@@ -50,6 +51,12 @@ export default function Posts() {
               : undefined,
         },
       });
+
+      if (plan !== "Premium") {
+        navigate("/dashboard");
+        console.log(plan);
+      }
+
       setPosts(res.data.data);
     } catch (error) {
       console.error("Error fetching posts", error);

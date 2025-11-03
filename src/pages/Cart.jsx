@@ -6,51 +6,48 @@ import api from "../services/api";
 
 const Cart = () => {
   const chooseCourseRef = useOutletContext();
+  const navigate = useNavigate();
 
   const handleScroll = () => {
     chooseCourseRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const [cart, setCart] = useState(null);
+  const [cart, setCart] = useState([]);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
 
-  const fetchCart = async () => {
-    try {
-      const res = await api.get("/cart");
-      setCart(res.data);
-    } catch (err) {
-      console.error("Error fetching cart:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  // Load cart from localStorage
   useEffect(() => {
-    fetchCart();
+    const storedCart = localStorage.getItem("guestCart");
+    if (storedCart) {
+      setCart(JSON.parse(storedCart));
+    }
+    setLoading(false);
   }, []);
 
-  const handleRemove = async () => {
-    try {
-      await api.delete(`/cart`);
-      setCart(null);
-    } catch (err) {
-      console.error("Error removing plan:", err);
-    }
+  // Remove single item
+  const handleRemove = () => {
+    setCart(null);
+    localStorage.removeItem("guestCart");
+    navigate("/")
   };
 
-  const handleClearCart = async () => {
-    try {
-      await api.delete("/cart");
-      setCart(null);
-    } catch (err) {
-      console.error("Error clearing cart:", err);
-    }
+  // Clear all cart
+  const handleClearCart = () => {
+    setCart([]);
+    localStorage.removeItem("guestCart");
   };
 
+  // Checkout (send cart items to backend)
   const handleCheckout = async () => {
+    const cart = JSON.parse(localStorage.getItem("guestCart"));
+
+    if (!cart) return;
+
     try {
-      const res = await api.post("/order");
+      const res = await api.post("/order", {
+        planId: cart.planId,
+        quantity: cart.quantity,
+      });
       const orderId = res.data._id;
       navigate(`/checkout?orderId=${orderId}`);
     } catch (err) {
@@ -62,6 +59,11 @@ const Cart = () => {
     return <p className="p-6">Loading cart...</p>;
   }
 
+  // Calculate total
+  const totalPrice = cart
+    ? (cart.discPrice || cart.actualPrice) * cart.quantity
+    : 0;
+
   return (
     <div className="w-2/3 lg:px-[40px] xl:px-0 px-[16px] mx-auto flex flex-col items-center pt-20 pb-[200px]">
       <Helmet>
@@ -72,21 +74,19 @@ const Cart = () => {
       <div className="w-full flex flex-col text-center py-10 space-y-2">
         <h1 className="font-bold text-[40px]">Your Cart</h1>
         <p>Review your selected plan before checkout</p>
-      </div>
+      </div>      
 
       {/* CART CONTAINER */}
       <div className="w-full flex justify-center items-center bg-white shadow-xl rounded-md overflow-hidden">
-        {cart && cart.plan ? (
+        {cart?.length !== 0 ? (
           <div className="w-full md:w-[80%] p-6 sm:p-10 flex flex-col gap-6">
-            {/* Cart Item */}
             <div className="flex justify-between items-center border-b pb-4">
               <div>
-                <h2 className="text-xl font-semibold">{cart.plan.title}</h2>
+                <h2 className="text-xl font-semibold">{cart?.title}</h2>
                 <p className="text-gray-600">
-                  Price: ${cart.plan.discPrice || cart.plan.actualPrice} ×{" "}
-                  {cart.quantity}
+                  Price: ${cart?.discPrice || cart?.actualPrice} × {cart?.quantity}
                 </p>
-                <p className="font-bold mt-1">Subtotal: ${cart.totalPrice}</p>
+                <p className="font-bold mt-1">Subtotal: ${totalPrice}</p>
               </div>
               <button
                 onClick={handleRemove}
@@ -100,11 +100,11 @@ const Cart = () => {
             {/* Summary */}
             <div className="flex flex-col md:flex-row md:justify-between items-center mt-4">
               <h2 className="text-2xl font-bold mb-4 md:mb-0">
-                Total: ${cart.totalPrice}
+                Total: ${totalPrice}
               </h2>
               <div className="flex space-x-4">
                 <button
-                  onClick={handleClearCart}
+                  onClick={handleRemove}
                   className="px-6 py-2 bg-gray-500 cursor-pointer text-white rounded-lg hover:bg-gray-600"
                 >
                   Clear Cart
@@ -119,6 +119,7 @@ const Cart = () => {
             </div>
           </div>
         ) : (
+          // Empty cart message
           <div className="w-full py-20 text-center">
             <h2 className="text-2xl font-semibold mb-4">Your cart is empty</h2>
             <button

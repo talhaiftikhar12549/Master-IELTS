@@ -13,19 +13,20 @@ const PaymentCard = ({
   const navigate = useNavigate();
 
   const handleAddToCart = async () => {
-    try {
-      // Add selected plan to cart
-      await api.post("/cart", {
-        planId: id,
-        quantity: 1,
-      });
-
-      // Redirect user to Cart page
-      navigate("/cart");
-    } catch (err) {
-      console.error("Error adding to cart", err);
-    }
+  const newCartItem = {
+    planId: id,
+    title,
+    actualPrice,
+    discPrice,
+    quantity: 1,
   };
+
+  // overwrite previous cart
+  localStorage.setItem("guestCart", JSON.stringify(newCartItem));
+
+  navigate("/cart");
+};
+
   return (
     <div
       key={id}
@@ -53,7 +54,7 @@ const PaymentCard = ({
       <div className="w-full flex items-end justify-center space-x-4 py-10 pr-5 min-h-[180px]">
         <p
           className={`font-extrabold mb-4 ${
-            title === "Premium" ? "text-[32px] line-through" : "text-[68px]"
+            discPrice ? "text-[32px] line-through" : "text-[68px]"
           }`}
         >
           ${actualPrice}

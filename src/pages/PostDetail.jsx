@@ -19,7 +19,7 @@ import SinglePostSkeleton from "../components/Community/SinglePostSkeleton";
 const PostDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, plan } = useAuth();
 
   const [post, setPost] = useState(null);
   const [comments, setComments] = useState([]);
@@ -54,6 +54,10 @@ const PostDetail = () => {
 
   const fetchPost = async () => {
     const res = await api.get(`/post/${id}`);
+
+    if (plan !== "Premium") {
+      navigate("/dashboard")
+    }
     setPost(res.data.data);
   };
 
